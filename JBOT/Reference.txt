@@ -1,0 +1,6 @@
+References
+1. https://www.c-sharpcorner.com/article/what-is-clean-architecture/
+2. https://betterprogramming.pub/practicing-clean-architecture-in-c-62fe55aed83c
+3. https://www.bing.com/videos/search?q=clean+architecture+cqrs+mediatr&view=detail&mid=72C6FF605E928518458F72C6FF605E928518458F&FORM=VIRE
+
+Commit

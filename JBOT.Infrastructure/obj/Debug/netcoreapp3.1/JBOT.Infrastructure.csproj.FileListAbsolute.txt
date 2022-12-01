@@ -1,0 +1,14 @@
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\bin\Debug\netcoreapp3.1\JBOT.Infrastructure.exe
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\bin\Debug\netcoreapp3.1\JBOT.Infrastructure.deps.json
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\bin\Debug\netcoreapp3.1\JBOT.Infrastructure.runtimeconfig.json
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\bin\Debug\netcoreapp3.1\JBOT.Infrastructure.runtimeconfig.dev.json
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\bin\Debug\netcoreapp3.1\JBOT.Infrastructure.dll
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\bin\Debug\netcoreapp3.1\JBOT.Infrastructure.pdb
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\obj\Debug\netcoreapp3.1\JBOT.Infrastructure.csproj.AssemblyReference.cache
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\obj\Debug\netcoreapp3.1\JBOT.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\obj\Debug\netcoreapp3.1\JBOT.Infrastructure.AssemblyInfoInputs.cache
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\obj\Debug\netcoreapp3.1\JBOT.Infrastructure.AssemblyInfo.cs
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\obj\Debug\netcoreapp3.1\JBOT.Infrastructure.csproj.CoreCompileInputs.cache
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\obj\Debug\netcoreapp3.1\JBOT.Infrastructure.dll
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\obj\Debug\netcoreapp3.1\JBOT.Infrastructure.pdb
+D:\Users\jalapar\source\repos\JBOT.Infrastructure\obj\Debug\netcoreapp3.1\JBOT.Infrastructure.genruntimeconfig.cache
