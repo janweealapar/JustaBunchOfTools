@@ -1,0 +1,12 @@
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\bin\Debug\net6.0\JBOT.Domain.deps.json
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\bin\Debug\net6.0\JBOT.Domain.dll
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\bin\Debug\net6.0\ref\JBOT.Domain.dll
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\bin\Debug\net6.0\JBOT.Domain.pdb
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\obj\Debug\net6.0\JBOT.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\obj\Debug\net6.0\JBOT.Domain.AssemblyInfoInputs.cache
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\obj\Debug\net6.0\JBOT.Domain.AssemblyInfo.cs
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\obj\Debug\net6.0\JBOT.Domain.csproj.CoreCompileInputs.cache
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\obj\Debug\net6.0\JBOT.Domain.dll
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\obj\Debug\net6.0\ref\JBOT.Domain.dll
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\obj\Debug\net6.0\JBOT.Domain.pdb
+C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT.Domain\obj\Debug\net6.0\JBOT.Domain.csproj.AssemblyReference.cache

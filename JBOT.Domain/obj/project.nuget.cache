@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Vhj9hoyOJHgn/JlbXbLVcrBudTsMbNZrXTPDYtO+y7RsTduGyZkvAfZfI3X6V/I1zgCql49Q9wnWoJIKAcRKhA==",
+  "dgSpecHash": "q72UjVj5xNWRQcDOKLTnghPjebU5TxaNrIgkmfaPiWXooULqnk3sfS9aQXupzLnybz1p5MkmQLufO98b5IYiSA==",
   "success": true,
-  "projectFilePath": "C:\\repo\\git\\JustaBunchOfTools\\JBOT.Domain\\JBOT.Domain.csproj",
+  "projectFilePath": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Domain\\JBOT.Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

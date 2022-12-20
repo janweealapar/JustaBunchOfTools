@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\repo\\git\\JustaBunchOfTools\\JBOT.Infrastructure\\JBOT.Infrastructure.csproj": {}
+    "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Infrastructure\\JBOT.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\repo\\git\\JustaBunchOfTools\\JBOT.Infrastructure\\JBOT.Infrastructure.csproj": {
+    "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Core\\JBOT.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\repo\\git\\JustaBunchOfTools\\JBOT.Infrastructure\\JBOT.Infrastructure.csproj",
-        "projectName": "JBOT.Infrastructure",
-        "projectPath": "C:\\repo\\git\\JustaBunchOfTools\\JBOT.Infrastructure\\JBOT.Infrastructure.csproj",
+        "projectUniqueName": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Core\\JBOT.Application.csproj",
+        "projectName": "JBOT.Application",
+        "projectPath": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Core\\JBOT.Application.csproj",
         "packagesPath": "C:\\Users\\jalapar\\.nuget\\packages\\",
-        "outputPath": "C:\\repo\\git\\JustaBunchOfTools\\JBOT.Infrastructure\\obj\\",
+        "outputPath": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -25,7 +25,7 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "net6.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -33,9 +33,13 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
-            "projectReferences": {}
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Domain\\JBOT.Domain.csproj": {
+                "projectPath": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Domain\\JBOT.Domain.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -45,8 +49,22 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -62,7 +80,169 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.6.21355.2\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Domain\\JBOT.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Domain\\JBOT.Domain.csproj",
+        "projectName": "JBOT.Domain",
+        "projectPath": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Domain\\JBOT.Domain.csproj",
+        "packagesPath": "C:\\Users\\jalapar\\.nuget\\packages\\",
+        "outputPath": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jalapar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.6.21355.2\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Infrastructure\\JBOT.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Infrastructure\\JBOT.Infrastructure.csproj",
+        "projectName": "JBOT.Infrastructure",
+        "projectPath": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Infrastructure\\JBOT.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\jalapar\\.nuget\\packages\\",
+        "outputPath": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\jalapar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Core\\JBOT.Application.csproj": {
+                "projectPath": "C:\\repo\\git\\JustaBunchOfTools\\JustaBunchOfTools\\JBOT.Core\\JBOT.Application.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
+            "Microsoft.Extensions.Configuration.EnvironmentVariables": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.FileExtensions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-preview.6.21355.2\\RuntimeIdentifierGraph.json"
         }
       }
     }
