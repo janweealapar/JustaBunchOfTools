@@ -3,7 +3,10 @@
     "tfm": "net6.0",
     "framework": {
       "name": "Microsoft.NETCore.App",
-      "version": "6.0.0-preview.6.21352.12"
+      "version": "6.0.0"
+    },
+    "configProperties": {
+      "System.Reflection.NullabilityInfoContext.IsSupported": true
     }
   }
 }

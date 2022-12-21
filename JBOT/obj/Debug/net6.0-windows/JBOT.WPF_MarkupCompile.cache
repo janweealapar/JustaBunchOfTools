@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT\obj\Debug\net6.0-windows\
+C:\repo\JustaBunchOfTools\JBOT\obj\Debug\net6.0-windows\
 JBOT.WPF
 none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
-C:\repo\git\JustaBunchOfTools\JustaBunchOfTools\JBOT\App.xaml
+C:\repo\JustaBunchOfTools\JBOT\App.xaml
 21940794329
 
 5-468392882
-195-1700353856
+211-1994661136
 MainWindow.xaml;Window1.xaml;
 
 False

@@ -27,13 +27,4 @@
     <ProjectReference Include="..\JBOT.Core\JBOT.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Databases\JbotDatabase.mdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Databases\JbotDatabase_log.ldf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
