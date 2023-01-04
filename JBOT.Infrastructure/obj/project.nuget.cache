@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "U5vLSjHLZ9O38LyRsy3yDWF7ipZ2ZCvzHSOcc87kEK9+yrs4lJ9QxjEllRddhzhu7+AuyXiTy9+3OwggsdBYdg==",
+  "dgSpecHash": "803oY7VFWr4WIvA22NkHxsRukki8jlcsJDOBbRQe1LKGLAGi/6x5gicPlg2AI8qrbgi7Aj6u/0baG8U1Oilhzg==",
   "success": true,
   "projectFilePath": "C:\\repo\\JustaBunchOfTools\\JBOT.Infrastructure\\JBOT.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -52,6 +52,7 @@
     "C:\\Users\\Janwee\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512",
+    "C:\\Users\\Janwee\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\system.configuration.configurationmanager\\5.0.0\\system.configuration.configurationmanager.5.0.0.nupkg.sha512",

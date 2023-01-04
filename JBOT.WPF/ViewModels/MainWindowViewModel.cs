@@ -1,6 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using JBOT.Application.Dtos;
+using JBOT.WPF.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Controls.Interfaces;
@@ -10,6 +16,7 @@ namespace JBOT.WPF.ViewModels
 {
     public partial class MainWindowViewModel : ObservableObject
     {
+        private readonly IApiService _apiService;
         private bool _isInitialized = false;
 
         [ObservableProperty]
@@ -24,15 +31,39 @@ namespace JBOT.WPF.ViewModels
         [ObservableProperty]
         private ObservableCollection<MenuItem> _trayMenuItems = new();
 
-        public MainWindowViewModel(INavigationService navigationService)
+        [ObservableProperty]
+        private List<DatabaseDto> _databases = new();
+
+        [ObservableProperty]
+        private DatabaseDto _selectedDatabase = new();
+
+        //public List<DatabaseDto> Databases
+        //{
+        //    get => _databases;
+        //    set => SetProperty(ref _databases, value);
+        //}
+
+        public MainWindowViewModel(INavigationService navigationService, IApiService apiService)
         {
             if (!_isInitialized)
+            {
+                _apiService = apiService;
                 InitializeViewModel();
+
+                GetDatabaseCommand.Execute(null);
+            }
+                
         }
 
+        public IAsyncRelayCommand GetDatabaseCommand => new AsyncRelayCommand(GetDatabases);
+
+        public async Task GetDatabases()
+        {
+            Databases = await _apiService.GetDatabaseDtos();
+        }
         private void InitializeViewModel()
         {
-            ApplicationTitle = "J.B.O.T.";
+            ApplicationTitle = "Toolbox";
 
             NavigationItems = new ObservableCollection<INavigationControl>
             {

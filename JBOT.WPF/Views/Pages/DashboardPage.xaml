@@ -19,18 +19,19 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
-        <ui:CardControl Grid.Column="0" HorizontalAlignment="Left"  Background="Coral"
-                 Icon="DatabaseLink20"  FontSize="13">
+        <ui:CardControl Grid.Column="0" HorizontalAlignment="Left"  Background="Salmon"
+                 Icon="DatabaseLink20">
             <StackPanel>
+                <TextBlock
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                    Margin="0,0,0,5"
+                    Text="Currently connected to :" />
                 <ComboBox ItemsSource="{Binding ViewModel.Databases, Mode=OneWay}"
                       DisplayMemberPath="Name"
                       SelectedValuePath="Id"
                       MinWidth="200"/>
-                <TextBlock
-                    FontSize="12"
-                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                    Margin="10,0,0,0"
-                    Text="Current Project Database" />
             </StackPanel>
             
         </ui:CardControl>

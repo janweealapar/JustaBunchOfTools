@@ -42,14 +42,24 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="0,12">
-                    <TextBlock FontSize="16" Text="J.B.O.T." />
+                    <TextBlock FontSize="16" Text="Toolbox" />
                     <TextBlock
-                        FontSize="10"
+                        FontSize="12"
                         Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                        Text="Just a Bunch Of Tools" />
+                        FontStyle="Italic"
+                        Text="For Smart Coding" />
                 </StackPanel>
 
-                <ui:AutoSuggestBox Grid.Row="1" Margin="0,0,0,12" />
+                
+                <ComboBox 
+                      Grid.Row="1" Margin="0,0,0,12"
+                      ItemsSource="{Binding ViewModel.Databases, Mode=OneWay}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectedItem="{Binding ViewModel.SelectedDatabase, Mode=TwoWay}"
+                      MinWidth="200"/>
+
+                <!--<ui:AutoSuggestBox Grid.Row="1" Margin="0,0,0,12" />-->
 
                 <!--  This is the main navigation of the application.  -->
                 <ui:NavigationFluent

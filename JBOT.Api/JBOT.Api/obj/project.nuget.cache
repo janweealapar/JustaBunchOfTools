@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "D+F1exE2iNEegaEPIu+jVgz5FK7E9eEWbux8wKf3hPH0TuhtV2lDrj4/tmAIdbKwNn0meGH6hZudD0ahAr5Ghg==",
+  "dgSpecHash": "1LvmRkHvwLhSu5TQ+vg2mfrgMrYqsn8aR3QeOb9IdcgFd7O0SLlExvGwIrSVG2j60QlLb2xaAi7HMzRsCuH9jA==",
   "success": true,
   "projectFilePath": "C:\\repo\\JustaBunchOfTools\\JBOT.Api\\JBOT.Api\\JBOT.Api.csproj",
   "expectedPackageFiles": [
@@ -54,6 +54,7 @@
     "C:\\Users\\Janwee\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512",
+    "C:\\Users\\Janwee\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
