@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "rt1/+EK11Gw1xM15LzpEsRThxni6g4BNG8yjZtJP1llVkyKX6eJGHIRDOU8OGBNVwtYV8aYU46kk026S/lDkTg==",
+  "dgSpecHash": "t0l7Wp5gZrayyiofHS0ZL4SHhTu53En2hmyFow98pyUEubK7T0iGVUEZKsYps5kdTQZhnZG2ZO+Z2wwvQFP1/Q==",
   "success": true,
   "projectFilePath": "C:\\repo\\JustaBunchOfTools\\JBOT.Core\\JBOT.Application.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Janwee\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
+    "C:\\Users\\Janwee\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\mediatr\\11.1.0\\mediatr.11.1.0.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\mediatr.contracts\\1.0.1\\mediatr.contracts.1.0.1.nupkg.sha512",
+    "C:\\Users\\Janwee\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.1\\microsoft.entityframeworkcore.7.0.1.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.1\\microsoft.entityframeworkcore.abstractions.7.0.1.nupkg.sha512",
     "C:\\Users\\Janwee\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\7.0.1\\microsoft.entityframeworkcore.analyzers.7.0.1.nupkg.sha512",

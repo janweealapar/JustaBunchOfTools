@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\repo\JustaBunchOfTools\JBOT.WPF\App.xaml
-4-1625266654
+6-1891123960
 1882702876
-18-847687578
-25058826081
-Views\Pages\DashboardPage.xaml;Views\Pages\DataPage.xaml;Views\Pages\SettingsPage.xaml;Views\Windows\MainWindow.xaml;
+26974516463
+256828701127
+Views\Pages\DashboardPage.xaml;Views\Pages\DataPage.xaml;Views\Pages\SettingsPage.xaml;Views\Pages\UnitTestPage.xaml;Views\Windows\AddUnitTestDialogWindow.xaml;Views\Windows\MainWindow.xaml;
 
 False
 

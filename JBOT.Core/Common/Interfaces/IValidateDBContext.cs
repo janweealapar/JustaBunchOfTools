@@ -9,8 +9,11 @@ namespace JBOT.Application.Common.Interfaces
 {
     public interface IValidateDBContext
     {
-        public Task<List<DatabaseDto>> DatabaseList { get; }
-        public Task<DatabaseDto> GetDatabaseById(int id);
-        public Task<List<TestableObjectDto>> TestableObjectList(string databaseName);
+        Task<List<DatabaseDto>> DatabaseList { get; }
+        Task<DatabaseDto> GetDatabaseById(int id);
+        Task<List<TestableObjectDto>> TestableObjectList(string databaseName);
+        Task<TestableObjectDetailsDto> GetTestableObjectDetailsById(string databaseName, int objectId);
+        Task<List<ParameterDto>> GetParametersByDatabaseAndObjectId(string databaseName, int objectId);
+        Task<TestableObjectDetailsDto> RunUnitTest(TestableObjectDetailsDto unitTest);
     }
 }

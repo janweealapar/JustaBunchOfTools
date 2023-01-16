@@ -1,5 +1,7 @@
-﻿using JBOT.WPF.Models;
+﻿using JBOT.Infrastructure;
+using JBOT.WPF.Models;
 using JBOT.WPF.Services;
+using JBOT.WPF.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,10 +43,13 @@ namespace JBOT.WPF
 
                 // Service containing navigation, same as INavigationWindow... but without window
                 services.AddSingleton<INavigationService, NavigationService>();
-
+                services.AddSingleton<ICurrentConnections, CurrentConnections>();
+                
                 // Main window with navigation
                 services.AddScoped<INavigationWindow, Views.Windows.MainWindow>();
                 services.AddScoped<ViewModels.MainWindowViewModel>();
+
+
 
                 // Views and ViewModels
                 services.AddScoped<Views.Pages.DashboardPage>();
@@ -54,9 +59,13 @@ namespace JBOT.WPF
                 services.AddScoped<Views.Pages.SettingsPage>();
                 services.AddScoped<ViewModels.SettingsViewModel>();
 
+                services.AddScoped<Views.Pages.UnitTestPage>();
+                services.AddScoped<ViewModels.UnitTestViewModel>();
+
                 services.AddScoped<IApiService, ApiService>();
 
                 // Configuration
+                services.AddMapper<App>();
                 services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
             }).Build();
 

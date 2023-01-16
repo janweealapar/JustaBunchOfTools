@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,9 +19,26 @@ namespace JBOT.Infrastructure.Services
             _restClient = new RestClient(baseUrl);
         }
 
-        public virtual async Task<RestResponse<T>> SendRequest<T>(RestRequest request)
+        public virtual async Task<RestResponse<T>> SendRequest<T>(RestRequest request, Method method = Method.Get)
         {
-            return await _restClient.ExecuteGetAsync<T>(request);
+            switch (method)
+            {
+                case Method.Get:
+                    return await _restClient.ExecuteGetAsync<T>(request);
+                case Method.Post:
+                    return await _restClient.ExecutePostAsync<T>(request);
+                case Method.Put:
+                case Method.Delete:
+                case Method.Head:
+                case Method.Options:
+                case Method.Patch:
+                case Method.Merge:
+                case Method.Copy:
+                case Method.Search:
+                default:
+                    return await _restClient.ExecuteGetAsync<T>(request);
+            }
+            
         }
     }
 }

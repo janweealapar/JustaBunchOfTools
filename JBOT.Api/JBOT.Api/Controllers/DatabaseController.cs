@@ -23,10 +23,15 @@ namespace JBOT.Api.Controllers
         }
 
         [HttpGet("{id:int}/TestableObjects")]
-
         public async Task<IActionResult> GetTestableObjects(int id)
         {
             var result = await _mediator.Send(new GetTestableObjectsQuery(id));
+            return Ok(result);
+        }
+        [HttpGet("{id:int}/TestableObjects/details")]
+        public async Task<IActionResult> GetTestableObjects(int id, [FromQuery] int? objId)
+        {
+            var result = await _mediator.Send(new GetTestableObjectDetailsByIdQuery(id, objId));
             return Ok(result);
         }
     }

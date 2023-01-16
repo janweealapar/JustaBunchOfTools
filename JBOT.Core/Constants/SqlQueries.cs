@@ -21,7 +21,6 @@ namespace JBOT.Application.Constants
             cross apply (select p.name + ' ' + TYPE_NAME(p.user_type_id) + ', ' 
                          from [{0}].sys.parameters p
                          where p.object_id = obj.object_id 
-                               and p.parameter_id != 0 
                         for xml path ('') ) par (parameters)
             UNION ALL
             select 
@@ -41,5 +40,41 @@ namespace JBOT.Application.Constants
                       and ret.parameter_id = 0
             where obj.type in ('FN')
             order by Name;";
+        public const string GetTestableObjectDetailsQuery =
+            @"select obj.object_id As ObjectId
+            	,	CONCAT(schema_name(obj.schema_id),'.' , obj.name) as Name
+            	, case obj.Type When 'P' THEN 'Stored Procedure'
+            					WHEN 'FN' THEN 'Scalar Function'
+            					ELSE type_desc END Type
+            	, TYPE_NAME(ret.user_type_id) as ReturnType
+                ,0 as Id
+				,'' TestName
+                ,'' Description
+				,0 DatabaseId
+				,'' as DatabaseName
+                ,NULL as Status
+            from [{0}].sys.objects obj
+            left join [{0}].sys.parameters ret on obj.object_id = ret.object_id
+            		and ret.parameter_id = 0
+            where obj.object_id='{1}'";
+
+        public const string GetTestableObjectParametersQuery =
+            @"select 
+            		p.parameter_id Id
+            	,	p.Name
+            	,	CAST(TYPE_NAME(p.user_type_id) as VARCHAR) DataType
+                ,   max_length as MaxLength
+            	,   Precision
+            	,	Scale
+            	,   is_output IsOutput
+                ,   '' Value
+            from [{0}].sys.parameters p
+            where p.object_id = '{1}'";
+    }
+
+    public static class ObjectType
+    {
+        public const string Procedure = "Stored Procedure";
+        public const string ScalarFunction = "Scalar Function";
     }
 }

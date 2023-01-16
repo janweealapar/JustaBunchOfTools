@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,6 +23,18 @@ namespace JBOT.Infrastructure
                 options.UseSqlServer(configuration.GetConnectionString("ValidateDatabase"),
                 b => b.MigrationsAssembly(typeof(ValidateDBContext).Assembly.FullName)), ServiceLifetime.Transient);
 
+            return services;
+        }
+
+        public static IServiceCollection AddMapper<T>(this IServiceCollection services) where T: class
+        {
+            services.AddAutoMapper(typeof(T));
+            return services;
+        }
+
+        public static IServiceCollection AddMapper(this IServiceCollection services, Assembly[] assemblies)
+        {
+            services.AddAutoMapper(assemblies);
             return services;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using JBOT.Application.Common.Interfaces;
 using JBOT.Application.Constants;
 using JBOT.Application.Dtos;
+using JBOT.Application.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System;
@@ -8,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using JBOT.Domain.Entities.Enums;
 
 namespace JBOT.Infrastructure.Persistence
 {
@@ -23,6 +27,9 @@ namespace JBOT.Infrastructure.Persistence
         #region DbSets
         public DbSet<DatabaseDto> Databases { get; set; }
         public DbSet<TestableObjectDto> TestableObjects { get; set; }
+        public DbSet<TestableObjectDetailsDto> TestableObjectDetails { get; set; }
+        public DbSet<ParameterDto> Parameters { get; set; }
+       
         #endregion
 
         #region Methods
@@ -31,6 +38,83 @@ namespace JBOT.Infrastructure.Persistence
             this.Databases.FromSqlRaw(string.Format(SqlQueries.GetDatabaseByIdQuery, id)).FirstOrDefaultAsync();
         public Task<List<TestableObjectDto>> TestableObjectList(string databaseName) => 
             this.TestableObjects.FromSqlRaw(string.Format(SqlQueries.GetTestableObjectsQuery,databaseName)).ToListAsync();
+        public Task<TestableObjectDetailsDto> GetTestableObjectDetailsById(string databaseName, int objectId) => 
+            this.TestableObjectDetails.FromSqlRaw(string.Format(SqlQueries.GetTestableObjectDetailsQuery,databaseName,objectId)).FirstOrDefaultAsync();
+        public Task<List<ParameterDto>> GetParametersByDatabaseAndObjectId(string databaseName, int objectId) =>
+            this.Parameters.FromSqlRaw(string.Format(SqlQueries.GetTestableObjectParametersQuery, databaseName, objectId)).ToListAsync();
+
+
+        public async Task<TestableObjectDetailsDto> RunUnitTest(TestableObjectDetailsDto unitTest)
+        {
+            string parameterString = string.Empty, result = string.Empty;
+            SqlParameter[] parameterArray;
+            using (var command = this.Database.GetDbConnection().CreateCommand())
+            {
+                try
+                {
+                    command.Parameters.Clear();
+                    parameterString = unitTest.InputParameters.Select(p => p.Name).ToList().Concat(",");
+                    parameterArray = unitTest.InputParameters.Select(p => new SqlParameter
+                    {
+                        ParameterName = p.Name,
+                        Value = p.Value
+                    }).ToArray();
+                    command.Parameters.AddRange(parameterArray);
+
+
+                    if (unitTest.Type == ObjectType.ScalarFunction)
+                    {
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = $"SELECT [{unitTest.DatabaseName}].{unitTest.Name}({parameterString})";
+                        await this.Database.OpenConnectionAsync();
+                        result = (await command.ExecuteScalarAsync()).ToString();
+                    }
+                    else if (unitTest.Type == ObjectType.Procedure)
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandText = $"[{unitTest.DatabaseName}].{unitTest.Name}";
+                        command.Parameters.Insert(0, unitTest.OutputParameters.Where(p => p.Id == 0)
+                            .Select(p => new SqlParameter
+                            {
+                                ParameterName = p.Name,
+                                Direction = ParameterDirection.ReturnValue
+                            }).First());
+                        var outputParameterArray = unitTest.OutputParameters.Where(p => p.Id > 0)
+                                                    .Select(p => new SqlParameter
+                                                    {
+                                                        ParameterName = p.Name,
+                                                        Direction = ParameterDirection.Output,
+                                                        Precision = (byte)p.Precision,
+                                                        Scale = (byte)p.Scale,
+                                                        Size = p.MaxLength
+                                                    }).ToArray();
+                        command.Parameters.AddRange(outputParameterArray);
+                        await this.Database.OpenConnectionAsync();
+                        result = (await command.ExecuteScalarAsync())?.ToString() ?? string.Empty;
+                        if (string.IsNullOrEmpty(result))
+                        {
+                            result = command.Parameters[unitTest.OutputParameters.First().Name].Value?.ToString() ?? string.Empty;
+                        }
+                    }
+                    unitTest.OutputParameters.First(p => p.Id == 0).Actual = result;
+                    foreach (var item in unitTest.OutputParameters.Where(p => p.Id > 0))
+                    {
+                        item.Actual = command.Parameters[item.Name].Value?.ToString();
+                    }
+
+                    unitTest.OutputParameters.Assert();
+                    
+                    unitTest.Status = unitTest.OutputParameters.Where(p=> !p.IsSuccess ?? false).Any() ? StatusEnums.Failed: StatusEnums.Success;
+                }
+                catch (Exception ex)
+                {
+                    unitTest.Status = StatusEnums.Failed;
+                }
+                
+            }
+            return unitTest;
+        }
+
         #endregion
 
 
@@ -38,11 +122,29 @@ namespace JBOT.Infrastructure.Persistence
         {
             modelBuilder.Ignore<DatabaseDto>();
             modelBuilder.Ignore<TestableObjectDto>();
+            modelBuilder.Ignore<TestableObjectDetailsDto>();
+            modelBuilder.Ignore<ParameterDto>();
+            modelBuilder.Ignore<BaseParameterDto>();
 
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<DatabaseDto>().HasNoKey().ToView($"vw_{nameof(Databases)}");
             modelBuilder.Entity<TestableObjectDto>().HasNoKey().ToView($"vw_{nameof(TestableObjects)}");
+            modelBuilder.Entity<TestableObjectDetailsDto>().HasNoKey()
+                .ToView($"vw_{nameof(TestableObjectDetails)}");
+            modelBuilder.Entity<ParameterDto>()
+                .Property(e => e.Precision)
+                .HasConversion<byte>();
+            modelBuilder.Entity<ParameterDto>()
+                .Property(e => e.Scale)
+                .HasConversion<byte>();
+            modelBuilder.Entity<ParameterDto>()
+                .Property(e => e.MaxLength)
+                .HasConversion<Int16>();
+            modelBuilder.Entity<ParameterDto>()
+                 .HasNoKey()
+                .ToView($"vw_{nameof(Parameters)}");
+
         }
     }
 }

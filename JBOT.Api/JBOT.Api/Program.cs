@@ -22,6 +22,8 @@ builder.Services.AddScoped<IApplicationDBContext,ApplicationDBContext>();
 builder.Services.AddMediatR(typeof(GetAllDatabasesQuery));
 builder.Services.AddMediatR(typeof(GetTestableObjectsQuery));
 
+builder.Services.AddMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

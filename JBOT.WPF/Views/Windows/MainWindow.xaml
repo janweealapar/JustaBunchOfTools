@@ -50,7 +50,7 @@
                         Text="For Smart Coding" />
                 </StackPanel>
 
-                
+
                 <ComboBox 
                       Grid.Row="1" Margin="0,0,0,12"
                       ItemsSource="{Binding ViewModel.Databases, Mode=OneWay}"
@@ -58,6 +58,7 @@
                       SelectedValuePath="Id"
                       SelectedItem="{Binding ViewModel.SelectedDatabase, Mode=TwoWay}"
                       MinWidth="200"/>
+
 
                 <!--<ui:AutoSuggestBox Grid.Row="1" Margin="0,0,0,12" />-->
 

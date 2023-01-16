@@ -103,3 +103,5 @@ C:\repo\JustaBunchOfTools\JBOT.Api\JBOT.Api\obj\Debug\net6.0\JBOT.Api.pdb
 C:\repo\JustaBunchOfTools\JBOT.Api\JBOT.Api\obj\Debug\net6.0\JBOT.Api.genruntimeconfig.cache
 C:\repo\JustaBunchOfTools\JBOT.Api\JBOT.Api\obj\Debug\net6.0\ref\JBOT.Api.dll
 C:\repo\JustaBunchOfTools\JBOT.Api\JBOT.Api\bin\Debug\net6.0\RestSharp.dll
+C:\repo\JustaBunchOfTools\JBOT.Api\JBOT.Api\bin\Debug\net6.0\AutoMapper.dll
+C:\repo\JustaBunchOfTools\JBOT.Api\JBOT.Api\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

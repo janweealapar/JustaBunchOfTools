@@ -1,4 +1,6 @@
-﻿using System;
+﻿using JBOT.WPF.ViewModels;
+using ReactiveUI;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using Wpf.Ui.Controls.Interfaces;
@@ -15,7 +17,6 @@ namespace JBOT.WPF.Views.Windows
         {
             get;
         }
-
         public MainWindow(ViewModels.MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService)
         {
             ViewModel = viewModel;
