@@ -8,12 +8,18 @@
     <Compile Update="Views\Windows\AddUnitTestDialogWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Windows\EditUnitTestDialogWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Pages\UnitTestPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Windows\AddUnitTestDialogWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Windows\EditUnitTestDialogWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

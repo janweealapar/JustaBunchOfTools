@@ -25,12 +25,19 @@ namespace JBOT.WPF.ViewModels
     public partial class AddUnitTestDialogViewModel : ObservableObject
     {
         private bool _isInitialized = false;
+        public bool _isReload = false;
         private readonly IApiService _apiService;
         private readonly int _currentDatabaseId;
         private readonly ICurrentConnections _currentConnections;
 
         [ObservableProperty]
         private string _title = string.Empty;
+
+        [ObservableProperty]
+        private string _testName = string.Empty;
+
+        [ObservableProperty]
+        private string _testDescription = string.Empty;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SetSelectedTestableObjectCommand))]
@@ -43,6 +50,7 @@ namespace JBOT.WPF.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(QuickRunCommand))]
+        [NotifyCanExecuteChangedFor(nameof(AddCommand))]
         private TestableObjectDetailsDto _testableObjectDetails = new();
 
         [ObservableProperty]
@@ -56,13 +64,14 @@ namespace JBOT.WPF.ViewModels
             Title = "Add Unit Test";
             if (!_isInitialized)
             {
-                _currentDatabaseId = currentConnections.DatabaseId;
+                _currentDatabaseId = currentConnections.DatabaseId.Value;
                 _currentConnections = currentConnections;
                 _apiService = apiService;
                 InitializeViewModel();
 
                 SetSelectedTestableObjectCommand = new AsyncRelayCommand<int>(SetSelectedTestableObject, CanExecuteSetSelectedTestableObjectCommand);
                 QuickRunCommand = new AsyncRelayCommand(QuickRun, CanExecuteQuickRun);
+                AddCommand = new AsyncRelayCommand(Add, CanAdd);
             }
         }
 
@@ -71,11 +80,13 @@ namespace JBOT.WPF.ViewModels
         public IAsyncRelayCommand SetSelectedTestableObjectCommand { get; set; }
 
         public IAsyncRelayCommand QuickRunCommand { get; set; }
+        public IAsyncRelayCommand AddCommand { get; set; }
+        public IRelayCommand ClearCommand  => new RelayCommand(Clear);
 
         public async Task GetTestableObjects()
         {
             TestableObjects.Clear();
-            var testableObjectDtos = await _apiService.TestableObjectDtos(_currentDatabaseId);
+            var testableObjectDtos = await _apiService.TestableObjectDtos(_currentConnections.Server,_currentDatabaseId);
             TestableObjects.AddRange(testableObjectDtos);
         }
         private bool CanExecuteSetSelectedTestableObjectCommand(int obj)
@@ -85,7 +96,7 @@ namespace JBOT.WPF.ViewModels
         public async Task SetSelectedTestableObject(int objectId)
         {
             SelectedTestableObject = TestableObjects.FirstOrDefault(to=> to.ObjectId == objectId) ?? new();
-            TestableObjectDetails = await _apiService.GetTestableObjectDetails(_currentDatabaseId, objectId);
+            TestableObjectDetails = await _apiService.GetTestableObjectDetails(_currentConnections.Server,_currentDatabaseId, objectId);
         }
 
         public async Task QuickRun()
@@ -94,11 +105,12 @@ namespace JBOT.WPF.ViewModels
             {
                 return;
             }
-
+            TestableObjectDetails.TestName = TestName; 
+            TestableObjectDetails.Description= TestDescription;
             TestableObjectDetails.DatabaseId = _currentDatabaseId;
             TestableObjectDetails.DatabaseName = _currentConnections.DatabaseName;
-
-            TestableObjectDetails = await _apiService.QuickRun(TestableObjectDetails);
+            TestableObjectDetails.Server = _currentConnections.Server;
+            TestableObjectDetails = await _apiService.QuickRun(TestableObjectDetails, _currentConnections?.Server?? string.Empty);
         }
 
         public bool CanExecuteQuickRun()
@@ -108,6 +120,38 @@ namespace JBOT.WPF.ViewModels
                 return false;
             }
             return true;
+        }
+
+        public async Task Add()
+        {
+            TestableObjectDetails = await _apiService.Add(TestableObjectDetails);
+            if (TestableObjectDetails.Status == StatusEnums.Success)
+            {
+                Clear();
+                _isReload = true;
+            }
+        }
+
+        public bool CanAdd()
+        {
+            return (TestableObjectDetails.Status ?? StatusEnums.Failed) == StatusEnums.Success;
+        }
+
+        public void Clear()
+        {
+            TestableObjectDetails.Status = StatusEnums.Failed;
+            foreach (var parameter in TestableObjectDetails.InputParameters)
+            {
+                parameter.Value = string.Empty;
+            }
+
+            foreach (var parameter in TestableObjectDetails.OutputParameters)
+            {
+                parameter.Actual = string.Empty;
+                parameter.Expected = string.Empty;
+                parameter.Operator = null;
+                parameter.IsSuccess = null;
+            }
         }
 
         private void InitializeViewModel()

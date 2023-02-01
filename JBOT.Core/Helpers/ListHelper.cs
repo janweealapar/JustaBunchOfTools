@@ -8,7 +8,12 @@ namespace JBOT.Application.Helpers
 {
     public static class ListHelper
     {
-        public static string Concat(this List<string> list, string separator)
+        public static string ConcatList(this List<string> list, string separator)
+        {
+            return string.Join(separator, list);
+        }
+
+        public static string ConcatList(this IEnumerable<string> list, string separator)
         {
             return string.Join(separator, list);
         }

@@ -53,6 +53,9 @@ namespace JBOT.Application.Constants
 				,0 DatabaseId
 				,'' as DatabaseName
                 ,NULL as Status
+                ,'' ErrorTitle
+                ,'' ErrorMessage
+                ,'' Server
             from [{0}].sys.objects obj
             left join [{0}].sys.parameters ret on obj.object_id = ret.object_id
             		and ret.parameter_id = 0

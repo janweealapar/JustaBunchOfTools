@@ -1,5 +1,6 @@
 ﻿using JBOT.Application.Common.Interfaces;
 using JBOT.Application.Dtos;
+using JBOT.Application.Queries.Databases;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -10,21 +11,21 @@ using System.Threading.Tasks;
 
 namespace JBOT.Application.Commands
 {
-    public class ExecuteUnitTestCommand : IRequest<TestableObjectDetailsDto>
+    public class ExecuteUnitTestCommand : BaseQuery<TestableObjectDetailsDto>
     {
+        public ExecuteUnitTestCommand(string server)
+        {
+            Server= server;
+        }
         public TestableObjectDetailsDto UnitTest { get; set; }
 
-        public class ExecuteUnitTestCommandHandler : IRequestHandler<ExecuteUnitTestCommand, TestableObjectDetailsDto>
+        public class ExecuteUnitTestCommandHandler : BaseQueryHandler<ExecuteUnitTestCommand, TestableObjectDetailsDto>
         {
-            private readonly IValidateDBContext _dbContext;
-            public ExecuteUnitTestCommandHandler(IValidateDBContext dbContext)
-            {
-                _dbContext = dbContext;
-            }
+            public ExecuteUnitTestCommandHandler(IValidationContextFactory factory):base(factory) { }
 
-            public async Task<TestableObjectDetailsDto> Handle(ExecuteUnitTestCommand request, CancellationToken cancellationToken)
+            public override async Task<TestableObjectDetailsDto> DoTask(ExecuteUnitTestCommand request, CancellationToken cancellationToken)
             {
-                await _dbContext.RunUnitTest(request.UnitTest);
+                await ValidateDBContext.RunUnitTest(request.UnitTest);
                 return request.UnitTest;
             }
         }

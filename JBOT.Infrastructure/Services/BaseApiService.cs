@@ -28,7 +28,9 @@ namespace JBOT.Infrastructure.Services
                 case Method.Post:
                     return await _restClient.ExecutePostAsync<T>(request);
                 case Method.Put:
+                    return await _restClient.ExecuteAsync<T>(request,Method.Put);
                 case Method.Delete:
+                    return await _restClient.ExecuteAsync<T>(request, Method.Delete);
                 case Method.Head:
                 case Method.Options:
                 case Method.Patch:

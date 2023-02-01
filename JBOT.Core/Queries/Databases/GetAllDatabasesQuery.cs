@@ -10,19 +10,21 @@ using System.Threading.Tasks;
 
 namespace JBOT.Application.Queries.Databases
 {
-    public class GetAllDatabasesQuery: IRequest<List<DatabaseDto>>
+    public class GetAllDatabasesQuery: BaseQuery<List<DatabaseDto>>
     {
-        public class GetAllDatabasesQueryHandler : IRequestHandler<GetAllDatabasesQuery, List<DatabaseDto>>
+        public GetAllDatabasesQuery(string server)
         {
-            private readonly IValidateDBContext _validateDBContext;
-
-            public GetAllDatabasesQueryHandler(IValidateDBContext validateDBContext)
+            base.Server = server;
+        }
+        public class GetAllDatabasesQueryHandler : BaseQueryHandler<GetAllDatabasesQuery, List<DatabaseDto>>
+        {
+            public GetAllDatabasesQueryHandler(IValidationContextFactory validateDBContextFactory):base(validateDBContextFactory)
             {
-                _validateDBContext = validateDBContext;
             }
-            public async Task<List<DatabaseDto>> Handle(GetAllDatabasesQuery request, CancellationToken cancellationToken)
+
+            public override async Task<List<DatabaseDto>> DoTask(GetAllDatabasesQuery request, CancellationToken cancellationToken)
             {
-                return await _validateDBContext.DatabaseList;
+                return await ValidateDBContext.DatabaseList;
             }
         }
     }

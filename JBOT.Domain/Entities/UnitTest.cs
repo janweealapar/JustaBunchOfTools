@@ -9,14 +9,15 @@ namespace JBOT.Domain.Entities
     {
         public string TestName { get; set; }
         public string Description { get; set; }
+        public string Server { get; set; }
         public int DatabaseId { get; set; }
         public string DatabaseName { get; set; }
         public int ObjectId { get; set; }
         public string ObjectName { get; set; }
-        public List<UnitTestParameter> Parameters { get; set; }
-        public string Act { get; set; }
-        public List<UnitTestAssertation> Assertations { get; set; }
+        public string ObjectType { get; set; }
+        public virtual List<UnitTestParameter> Parameters { get; set; } = new();
+        public virtual List<UnitTestAssertation> Assertations { get; set; } = new();
         public int? StatusId { get; set; }
-        public Status Status { get; set; }
+        public virtual Status Status { get; set; }
     }
 }

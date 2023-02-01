@@ -10,25 +10,24 @@ using System.Threading.Tasks;
 
 namespace JBOT.Application.Queries.Databases
 {
-    public class GetTestableObjectsQuery : IRequest<List<TestableObjectDto>>
+    public class GetTestableObjectsQuery : BaseQuery<List<TestableObjectDto>>
     {
-        public GetTestableObjectsQuery(int id) 
+        public GetTestableObjectsQuery(string server, int id) 
         {
+            Server = server;
             DatabaseId = id;
         }
         public int DatabaseId { get; set; }
-        public class GetTestableObjectsQueryHandler : IRequestHandler<GetTestableObjectsQuery, List<TestableObjectDto>>
+        public class GetTestableObjectsQueryHandler : BaseQueryHandler<GetTestableObjectsQuery, List<TestableObjectDto>>
         {
-            private readonly IValidateDBContext _validateDBContext;
-
-            public GetTestableObjectsQueryHandler(IValidateDBContext validateDBContext)
+            public GetTestableObjectsQueryHandler(IValidationContextFactory validateDBContextFactory):base(validateDBContextFactory)
             {
-                _validateDBContext = validateDBContext;
             }
-            public async Task<List<TestableObjectDto>> Handle(GetTestableObjectsQuery request, CancellationToken cancellationToken)
+
+            public override async Task<List<TestableObjectDto>> DoTask(GetTestableObjectsQuery request, CancellationToken cancellationToken)
             {
-                var database = await _validateDBContext.GetDatabaseById(request.DatabaseId);
-                return await _validateDBContext.TestableObjectList(database.Name);
+                var database = await ValidateDBContext.GetDatabaseById(request.DatabaseId);
+                return await ValidateDBContext.TestableObjectList(database.Name);
             }
         }
     }

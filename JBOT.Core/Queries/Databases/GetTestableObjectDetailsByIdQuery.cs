@@ -12,40 +12,48 @@ using System.Threading.Tasks;
 
 namespace JBOT.Application.Queries.Databases
 {
-    public class GetTestableObjectDetailsByIdQuery : IRequest<TestableObjectDetailsDto>
+    public class GetTestableObjectDetailsByIdQuery : BaseQuery<TestableObjectDetailsDto>
     {
         public int DatabaseId { get; set; }
         public int? ObjectId { get; set; }
 
-        public GetTestableObjectDetailsByIdQuery(int databaseId, int? objectId)
+        public GetTestableObjectDetailsByIdQuery(string server,int databaseId, int? objectId)
         {
+            Server = server;
             DatabaseId = databaseId;
             ObjectId = objectId;
         }
 
-        public class GetTestableObjectDetailsByIdQueryHandler : IRequestHandler<GetTestableObjectDetailsByIdQuery, TestableObjectDetailsDto>
+        public class GetTestableObjectDetailsByIdQueryHandler : BaseQueryHandler<GetTestableObjectDetailsByIdQuery, TestableObjectDetailsDto>
         {
-            private readonly IValidateDBContext _validateDBContext;
             private readonly IMapper _mapper;
-            public GetTestableObjectDetailsByIdQueryHandler(IValidateDBContext validateDBContext, IMapper mapper)
+            public GetTestableObjectDetailsByIdQueryHandler(IValidationContextFactory validateDBContextFactory, IMapper mapper): base(validateDBContextFactory)
             {
-                _validateDBContext = validateDBContext;
                 _mapper = mapper;
             }
 
-            public async Task<TestableObjectDetailsDto> Handle(GetTestableObjectDetailsByIdQuery request, CancellationToken cancellationToken)
+            public override async Task<TestableObjectDetailsDto> DoTask(GetTestableObjectDetailsByIdQuery request, CancellationToken cancellationToken)
             {
-                var database = await _validateDBContext.GetDatabaseById(request.DatabaseId);
-                var details = await _validateDBContext.GetTestableObjectDetailsById(database.Name, request?.ObjectId ?? 0);
-                if (details != null) 
-                { 
-                    var parameters = await _validateDBContext.GetParametersByDatabaseAndObjectId(database.Name, request?.ObjectId ?? 0);
-                    details.Parameters = _mapper.Map<List<BaseParameterDto>>(parameters);
-                    details.InputParameters = parameters.Where(p => !p.IsOutput).ToList();
-                    details.OutputParameters = details.InitializeOutputParameters(_mapper);
+                var database = await ValidateDBContext.GetDatabaseById(request.DatabaseId);
+                try
+                {
+                    var details = await ValidateDBContext.GetTestableObjectDetailsById(database.Name, request?.ObjectId ?? 0);
+                    if (details != null)
+                    {
+                        var parameters = await ValidateDBContext.GetParametersByDatabaseAndObjectId(database.Name, request?.ObjectId ?? 0);
+                        details.Parameters = _mapper.Map<List<BaseParameterDto>>(parameters);
+                        details.InputParameters = parameters.Where(p => !p.IsOutput).ToList();
+                        details.OutputParameters = details.InitializeOutputParameters(_mapper);
 
+                    }
+                    return details ?? new TestableObjectDetailsDto();
                 }
-                return details ?? new TestableObjectDetailsDto();
+                catch (Exception ex)
+                {
+                    string error = ex.Message;
+                    return new TestableObjectDetailsDto();
+                }
+                
             }
         }
     }

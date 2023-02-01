@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JBOT.WPF.Views.Windows"
-        xmlns:vm="clr-namespace:JBOT.WPF.ViewModels"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:converters="clr-namespace:JBOT.WPF.Converters"
+        xmlns:enum="clr-namespace:JBOT.Domain.Entities.Enums;assembly=JBOT.Domain"
         Height="450" 
         Width="800"
         Title="{Binding ViewModel.Title, Mode=OneWay}"
@@ -18,7 +18,7 @@
         WindowCornerPreference="Round"
         WindowStartupLocation="CenterScreen" 
         WindowStyle="ToolWindow"
-        mc:Ignorable="d">
+        mc:Ignorable="d" Closing="OnClosing">
     <ui:UiWindow.Resources>
         <converters:EnumToModelOperatorConverter x:Key="EnumToModelOperatorConverter"/>
         <Style x:Key="AssertTextBoxActualStyle"
@@ -41,19 +41,35 @@
                     <Setter Property="IconForeground" Value="LimeGreen"/>
                 </DataTrigger>
             </Style.Triggers>
-            
-
+        </Style>
+        <Style x:Key="StatusInfoBarStyle"
+               BasedOn="{StaticResource {x:Type ui:InfoBar}}"
+               TargetType="ui:InfoBar">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=ViewModel.TestableObjectDetails.Status}" Value="{x:Static enum:StatusEnums.Success}">
+                    <Setter Property="Severity" Value="Success"/>
+                    <Setter Property="IsOpen" Value="True"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=ViewModel.TestableObjectDetails.Status}" Value="{x:Static enum:StatusEnums.Failed}">
+                    <Setter Property="Severity" Value="Error"/>
+                    <Setter Property="IsOpen" Value="True"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </ui:UiWindow.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="285*"/>
+            <ColumnDefinition Width="46*"/>
+            <ColumnDefinition Width="69*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <ui:TitleBar
             Title="{Binding ViewModel.Title, Mode=OneWay}"
-            Grid.Row="0"
-            UseSnapLayout="True">
+            UseSnapLayout="True" Grid.ColumnSpan="3" VerticalAlignment="Center">
             <ui:TitleBar.Tray>
                 <ui:NotifyIcon
                     FocusOnLeftClick="True"
@@ -67,15 +83,19 @@
                 </ui:NotifyIcon>
             </ui:TitleBar.Tray>
         </ui:TitleBar>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="550"/>
             </Grid.ColumnDefinitions>
-
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <ui:DataGrid 
                 x:Name="dataGrid"
                 Grid.Row="0"
+                Grid.RowSpan="2"
                 HorizontalAlignment="Stretch"
                 ItemsSource="{Binding ViewModel.TestableObjects}" 
                 AutoGenerateColumns="False"
@@ -104,8 +124,25 @@
                 </ui:DataGrid.Columns>
             </ui:DataGrid>
 
-            <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0">
+            <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0" Height="Auto" VerticalAlignment="Stretch">
                 <ui:TextBox Margin="0,0,0,10" Icon="CodeText20" ToolTip="{Binding ViewModel.CurrentObjectTitle, Mode=OneWay}" PlaceholderText="Testable Object Name" IsEnabled="False" Text="{Binding ViewModel.CurrentObjectTitle, Mode=OneWay}" />
+                <TextBlock
+                    Margin="0,0,0,5"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="Test Name" />
+
+                <ui:Card Padding="5"  Margin="0,0,0,10" VerticalContentAlignment="Center">
+                    <ui:TextBox PlaceholderText="The name of the test." Text="{Binding ViewModel.TestName, Mode=TwoWay}" />
+                </ui:Card>
+
+                <TextBlock
+                    Margin="0,0,0,5"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="Description" />
+                <ui:Card Padding="5"  Margin="0,0,0,10" VerticalContentAlignment="Center">
+                    <ui:TextBox MinLines="3" MinHeight="100" PlaceholderText="Tell me about this test." Text="{Binding ViewModel.TestDescription, Mode=TwoWay}" />
+                </ui:Card>
+
                 <TextBlock
                     Margin="0,0,0,5"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -123,24 +160,6 @@
                                     <Grid.RowDefinitions>
                                         <RowDefinition MinHeight="40"/>
                                     </Grid.RowDefinitions>
-                                    <!--<Label Grid.Column="0" Grid.ColumnSpan="2" Content="Please select object first!" FontStyle="Italic" Width="100" VerticalAlignment="Center" FontWeight="SemiBold">
-                                        <Label.Style>
-                                            <Style TargetType="{x:Type Label}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ViewModel.HasSelectedObject}" Value="true">
-                                                        <DataTrigger.Setters>
-                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                        </DataTrigger.Setters>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding ViewModel.HasSelectedObject}" Value="false">
-                                                        <DataTrigger.Setters>
-                                                            <Setter Property="Visibility" Value="Hidden"/>
-                                                        </DataTrigger.Setters>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Label.Style>
-                                    </Label>-->
                                     <Label Grid.Column="0" Content="{Binding Path=Name}" Width="100" VerticalAlignment="Center" FontWeight="SemiBold"/>
                                     <ui:TextBox Grid.Column="1" Text="{Binding Value}" TextAlignment="Right" HorizontalAlignment="Stretch" PlaceholderText="{Binding Path=DataTypeDisplay}" VerticalContentAlignment="Center" VerticalAlignment="Center" BorderThickness="0"/>
                                 </Grid>
@@ -169,7 +188,7 @@
                                     </Grid.RowDefinitions>
 
                                     <Label Grid.Column="0" Content="{Binding Path=Name}" Width="100" VerticalAlignment="Center" FontWeight="SemiBold"/>
-                                   
+
                                     <ui:TextBox Grid.Column="1" Margin="2,0" Text="{Binding Expected}" TextAlignment="Right" HorizontalAlignment="Stretch" PlaceholderText="Expected" VerticalContentAlignment="Center" VerticalAlignment="Center" BorderThickness="0"/>
                                     <ComboBox Grid.Column="2" 
                                               Margin="2,0" 
@@ -185,7 +204,7 @@
                                                 PlaceholderText="Actual" 
                                                 Style="{StaticResource AssertTextBoxActualStyle}"
                                                 />
-                                    
+
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -200,12 +219,19 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <ui:Button Grid.Column="0" Command="{Binding ViewModel.QuickRunCommand}"  Icon="Flash28" Width="125" HorizontalContentAlignment="Left" Content="Quick Test" Appearance="Caution" />
-                    <ui:Button Grid.Column="1" Icon="Beaker32" Width="125" HorizontalContentAlignment="Center" Content="Add" Appearance="Success" />
+                    <ui:Button Grid.Column="1" Command="{Binding ViewModel.AddCommand}" Icon="Beaker32" Width="125" HorizontalContentAlignment="Center" Content="Add" Appearance="Success" />
                     <ui:Button Grid.Column="2" Icon="EraserTool24" Width="125" HorizontalContentAlignment="Center" Content="Clear" Appearance="Danger" />
                     <ui:Button Grid.Column="3" Icon="CalendarCancel24" Width="125" HorizontalContentAlignment="Center" Content="Cancel" Appearance="Secondary" />
                 </Grid>
             </StackPanel>
-            
+            <ui:InfoBar 
+                    Margin="0,0,0,10"
+                    VerticalAlignment="Bottom"
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    Title="{Binding ViewModel.TestableObjectDetails.ErrorTitle}"
+                    Message="{Binding ViewModel.TestableObjectDetails.ErrorMessage}"
+                    Style="{StaticResource StatusInfoBarStyle}"/>
         </Grid>
     </Grid>
 </ui:UiWindow>

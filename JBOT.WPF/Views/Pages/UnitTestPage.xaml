@@ -6,6 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:JBOT.WPF.Views.Pages"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:enum="clr-namespace:JBOT.Domain.Entities.Enums;assembly=JBOT.Domain"
       Title="UnitTestPage"
       d:DataContext="{d:DesignInstance local:UnitTestPage,
                                      IsDesignTimeCreatable=False}"
@@ -16,35 +17,129 @@
       mc:Ignorable="d">
 
     <Grid>
-        <ui:Button 
-            Padding="5" 
-            Appearance="Success" 
-            FontSize="16"
-            Width="100"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Right"
-            Margin="0,0,10,0"
-            Command="{Binding ViewModel.ShowAddUnitTestDialogCommand}"
-            Content="New"/>
-        <!--<ui:VirtualizingGridView>
-            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-            ItemsSource="{Binding ViewModel.Colors, Mode=OneWay}"
-            VirtualizingPanel.CacheLengthUnit="Item">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type models:DataColor}">
-                    <ui:Button
-                        Width="80"
-                        Height="80"
-                        Margin="2"
-                        Padding="0"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <ComboBox 
+                Margin="0,0,10,10"
+                ItemsSource="{Binding ViewModel.Servers, Mode=OneWay}"
+                SelectedItem="{Binding ViewModel.CurrentServer, Mode=TwoWay}"
+                VerticalAlignment="Top"
+                MinWidth="200"/>
+            
+            <ComboBox 
+                Margin="0,0,10,10"
+                ItemsSource="{Binding ViewModel.Databases, Mode=OneWay}"
+                DisplayMemberPath="Name"
+                SelectedValuePath="Id"
+                SelectedItem="{Binding ViewModel.CurrentDatabase, Mode=TwoWay}"
+                VerticalAlignment="Top"
+                MinWidth="200"/>
+
+        </StackPanel>
+
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <ui:Button 
+                Appearance="Caution" 
+                FontSize="16"
+                Width="55"
+                Height="30"
+                Icon="ArrowClockwise48"
+                Command="{Binding ViewModel.LoadGridCommand}"
+                CommandParameter="{Binding ViewModel.CurrentConnections}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Margin="0,0,10,10"/>
+            
+            <ui:Button 
+                BorderBrush="lime"
+                Appearance="Transparent" 
+                FontSize="16"
+                Width="55"
+                Height="30"
+                Icon="Play48"
+                Command="{Binding ViewModel.RunTestCommand}"
+                IconForeground="Lime"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Margin="0,0,10,10"/>
+            
+            <ui:Button 
+                Appearance="Primary" 
+                Icon="Add28"
+                FontSize="16"
+                Width="55"
+                Height="30"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Margin="0,0,10,10"
+                Command="{Binding ViewModel.ShowAddUnitTestDialogCommand}"/>
+        </StackPanel>
+        
+        
+        <ui:DataGrid
+            Grid.Row="1"
+            ItemsSource="{Binding ViewModel.UnitTests}" 
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                CanUserReorderColumns="False"
+                SelectionUnit="FullRow"
+                VerticalContentAlignment="Center"
+                FrozenColumnCount="2">
+            <ui:DataGrid.Resources>
+                <DataTemplate x:Key="EditTestCommand">
+                    <ui:Button 
+                        BorderThickness="1"
+                        Icon="BeakerEdit24"
+                        Command="{Binding EditCommand}"
+                        CommandParameter="{Binding}"
+                        Appearance="Transparent"
                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        Appearance="Secondary"
-                        Background="{Binding Color, Mode=OneWay}"
-                        FontSize="25"
-                        Icon="Fluent24" />
+                        Content=""/>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ui:VirtualizingGridView>-->
+                <DataTemplate x:Key="RemoveTestCommand">
+                    <ui:Button 
+                        BorderThickness="1"
+                        Icon="Delete48"
+                        Command="{Binding RemoveCommand}"
+                        CommandParameter="{Binding}"
+                        Appearance="Transparent"
+                        HorizontalAlignment="Stretch"
+                        Content=""/>
+                </DataTemplate>
+                <DataTemplate x:Key="BadgeTemplate">
+                    <ui:Badge>
+                        <ui:Badge.Style>
+                            <Style TargetType="ui:Badge"  BasedOn="{StaticResource {x:Type ui:Badge}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static enum:StatusEnums.Failed}">
+                                        <Setter Property="Appearance" Value="Danger"/>
+                                        <Setter Property="Content" Value="Failed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="{x:Static enum:StatusEnums.Success}">
+                                        <Setter Property="Appearance" Value="Success"/>
+                                        <Setter Property="Content" Value="Success"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ui:Badge.Style>
+                    </ui:Badge>
+                </DataTemplate>
+            </ui:DataGrid.Resources>
+            <ui:DataGrid.Columns>
+                <DataGridTemplateColumn x:Name="Edit" CellTemplate="{StaticResource EditTestCommand}" Header="Edit" MinWidth="50" />
+                <DataGridTemplateColumn x:Name="Remove" CellTemplate="{StaticResource RemoveTestCommand}" Header="Remove" MinWidth="50"/>
+                <DataGridTemplateColumn Header="Status" CellTemplate="{StaticResource BadgeTemplate}"/>
+                <DataGridTextColumn Binding="{Binding TestName}" Header="Name" Width="Auto" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding ObjectName}" Header="ObjectName" Width="Auto" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding ObjectType}" Header="ObjectType" Width="Auto" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Parameters}" Header="Parameters" Width="Auto" IsReadOnly="True"/>
+                
+            </ui:DataGrid.Columns>
+        </ui:DataGrid>
     </Grid>
 </ui:UiPage>

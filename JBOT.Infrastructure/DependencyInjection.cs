@@ -1,4 +1,6 @@
-﻿using JBOT.Infrastructure.Persistence;
+﻿using JBOT.Application.Common.Interfaces;
+using JBOT.Infrastructure.Persistence;
+using JBOT.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,13 +17,20 @@ namespace JBOT.Infrastructure
     {
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
+            
             services.AddDbContext<ApplicationDBContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("JbotDatabase"),
+                options.UseLazyLoadingProxies()
+                .UseSqlServer(configuration.GetConnectionString("JbotDatabase"),
                 b => b.MigrationsAssembly(typeof(ApplicationDBContext).Assembly.FullName)), ServiceLifetime.Transient);
 
+            //services.AddDbContext<ValidateDBContext>();
             services.AddDbContext<ValidateDBContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("ValidateDatabase"),
                 b => b.MigrationsAssembly(typeof(ValidateDBContext).Assembly.FullName)), ServiceLifetime.Transient);
+
+            services.AddScoped<IApplicationDBContext, ApplicationDBContext>();
+            services.AddDbContext<IValidateDBContext, ValidateDBContext>();
+            services.AddScoped<IValidationContextFactory, ValidationContextFactory>();
 
             return services;
         }

@@ -12,8 +12,12 @@ namespace JBOT.Domain.Entities
         public int ParameterId { get; set; }
         public string ParameterName { get; set; }
         public string ParameterType { get; set; }
+        public int MaxLength { get; set; }
+        public int Precision { get; set; }
+        public int Scale { get; set; }
+        public bool IsOutput { get; set; }
         public string Value { get; set; }
         public int? UnitTestId { get; set; }
-        public UnitTest UnitTest { get; set; }
+        public virtual UnitTest UnitTest { get; set; }
     }
 }

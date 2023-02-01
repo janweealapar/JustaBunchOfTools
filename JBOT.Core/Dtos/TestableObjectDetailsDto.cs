@@ -13,6 +13,7 @@ namespace JBOT.Application.Dtos
         public int Id { get; set; }
         public string TestName { get; set; }
         public string Description { get; set; }
+        public string Server { get; set; }
         public int DatabaseId { get; set; }
         public string DatabaseName { get; set; }
         public int ObjectId { get; set; }
@@ -23,7 +24,8 @@ namespace JBOT.Application.Dtos
         public List<ParameterDto> InputParameters { get; set; }
         public List<OutputParameterDto> OutputParameters { get; set; }
         public StatusEnums? Status { get; set; }
-        public string Act => "EXEC";
+        public string ErrorTitle { get; set; }
+        public string ErrorMessage { get; set; }
     }
     public class BaseParameterDto
     {
@@ -38,19 +40,7 @@ namespace JBOT.Application.Dtos
         {
             get
             {
-                var floatingDataType = new List<string>() { "numeric", "float", "double", "decimal" };
-                if (floatingDataType.Contains(this.DataType.ToLower()))
-                {
-                    return $"{DataType}({Precision},{Scale})";
-                }
-                else if (this.DataType.ToLower().Contains("char"))
-                {
-                    return $"{DataType}({MaxLength})";
-                }
-                else
-                {
-                    return DataType;
-                }
+                return this.GetDataTypeDisplayFormat();
             }
         }
     }

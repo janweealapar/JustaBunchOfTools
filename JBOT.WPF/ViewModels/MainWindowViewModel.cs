@@ -22,7 +22,6 @@ namespace JBOT.WPF.ViewModels
     public partial class MainWindowViewModel : ObservableObject
     {
         private readonly IApiService _apiService;
-        private readonly ICurrentConnections _currentConnections;
         private bool _isInitialized = false;
 
         [ObservableProperty]
@@ -40,46 +39,22 @@ namespace JBOT.WPF.ViewModels
         [ObservableProperty]
         private List<DatabaseDto> _databases = new();
 
-        //[ObservableProperty]
-        //[NotifyCanExecuteChangedFor(nameof(SetCurrentDatabaseCommand))]
-        private DatabaseDto _selectedDatabase = new();
-        public DatabaseDto SelectedDatabase // because combo box doesn't directly supports command
-        {
-            get => _selectedDatabase;
-            set 
-            {
-                if (SetProperty(ref _selectedDatabase, value))
-                {
-                    SetCurrentDatabaseCommand.Execute(null);
-                }
-            }
-        }
 
-        public MainWindowViewModel(INavigationService navigationService, IApiService apiService, ICurrentConnections currentConnections)
+        [ObservableProperty]
+        private DatabaseDto _selectedDatabase = new();
+
+        public MainWindowViewModel(INavigationService navigationService, IApiService apiService)
         {
             if (!_isInitialized)
             {
-                _apiService = apiService;
-                _currentConnections = currentConnections;
+                _apiService = apiService;;
 
                 InitializeViewModel();
 
-                GetDatabaseCommand.Execute(null);
             }
         }
 
-        public IAsyncRelayCommand GetDatabaseCommand => new AsyncRelayCommand(GetDatabases);
-        public IRelayCommand SetCurrentDatabaseCommand => new RelayCommand(SetCurrentDatabase);
 
-        public void SetCurrentDatabase()
-        {
-            _currentConnections.DatabaseId = SelectedDatabase.Id;
-            _currentConnections.DatabaseName = SelectedDatabase.Name;
-        }
-        public async Task GetDatabases()
-        {
-            Databases = await _apiService.GetDatabaseDtos();
-        }
 
         private void InitializeViewModel()
         {
@@ -94,13 +69,13 @@ namespace JBOT.WPF.ViewModels
                     Icon = SymbolRegular.Home24,
                     PageType = typeof(Views.Pages.DashboardPage)
                 },
-                new NavigationItem()
-                {
-                    Content = "Data",
-                    PageTag = "data",
-                    Icon = SymbolRegular.DataHistogram24,
-                    PageType = typeof(Views.Pages.DataPage)
-                },
+                //new NavigationItem()
+                //{
+                //    Content = "Data",
+                //    PageTag = "data",
+                //    Icon = SymbolRegular.DataHistogram24,
+                //    PageType = typeof(Views.Pages.DataPage)
+                //},
                 new NavigationItem()
                 {
                     Content = "Unit Tests",

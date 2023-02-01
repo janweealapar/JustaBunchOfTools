@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using JBOT.Domain.Entities.Enums;
+using Newtonsoft.Json.Serialization;
 
 namespace JBOT.Infrastructure.Persistence
 {
@@ -22,6 +23,10 @@ namespace JBOT.Infrastructure.Persistence
             : base(options)
         {
         }
+
+        public ValidateDBContext()
+        {
+        }
         #endregion
 
         #region DbSets
@@ -29,10 +34,11 @@ namespace JBOT.Infrastructure.Persistence
         public DbSet<TestableObjectDto> TestableObjects { get; set; }
         public DbSet<TestableObjectDetailsDto> TestableObjectDetails { get; set; }
         public DbSet<ParameterDto> Parameters { get; set; }
-       
+
         #endregion
 
         #region Methods
+
         public Task<List<DatabaseDto>> DatabaseList => this.Databases.FromSqlRaw(SqlQueries.GetDatabasesQuery).ToListAsync();
         public Task<DatabaseDto> GetDatabaseById(int id) => 
             this.Databases.FromSqlRaw(string.Format(SqlQueries.GetDatabaseByIdQuery, id)).FirstOrDefaultAsync();
@@ -44,6 +50,7 @@ namespace JBOT.Infrastructure.Persistence
             this.Parameters.FromSqlRaw(string.Format(SqlQueries.GetTestableObjectParametersQuery, databaseName, objectId)).ToListAsync();
 
 
+
         public async Task<TestableObjectDetailsDto> RunUnitTest(TestableObjectDetailsDto unitTest)
         {
             string parameterString = string.Empty, result = string.Empty;
@@ -53,7 +60,7 @@ namespace JBOT.Infrastructure.Persistence
                 try
                 {
                     command.Parameters.Clear();
-                    parameterString = unitTest.InputParameters.Select(p => p.Name).ToList().Concat(",");
+                    parameterString = unitTest.InputParameters.Select(p => p.Name).ToList().ConcatList(",");
                     parameterArray = unitTest.InputParameters.Select(p => new SqlParameter
                     {
                         ParameterName = p.Name,
@@ -103,12 +110,14 @@ namespace JBOT.Infrastructure.Persistence
                     }
 
                     unitTest.OutputParameters.Assert();
-                    
                     unitTest.Status = unitTest.OutputParameters.Where(p=> !p.IsSuccess ?? false).Any() ? StatusEnums.Failed: StatusEnums.Success;
+                    unitTest.ErrorTitle = $"{unitTest.Status?.GetEnumDescription() ?? string.Empty}.";
                 }
                 catch (Exception ex)
                 {
                     unitTest.Status = StatusEnums.Failed;
+                    unitTest.ErrorTitle = $"{unitTest.Status?.GetEnumDescription() ?? string.Empty}.";
+                    unitTest.ErrorMessage = ex.Message;
                 }
                 
             }

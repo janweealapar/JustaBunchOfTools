@@ -8,12 +8,21 @@ namespace JBOT.WPF.Models
 {
     public interface ICurrentConnections
     {
-        int DatabaseId { get; set; }
-        string DatabaseName { get; set; }
+        string? Server { get; }
+        int? DatabaseId { get; }
+        string? DatabaseName { get; }
     }
     public class CurrentConnections : ICurrentConnections
     {
-        public int DatabaseId { get; set; }
-        public string DatabaseName { get; set; }
+        public CurrentConnections(string? server, int? databaseId, string? databaseName)
+        {
+            this.Server = server;
+            DatabaseId = databaseId;
+            DatabaseName = databaseName;
+        }
+
+        public string? Server { get; private set; }
+        public int? DatabaseId { get; private set; }
+        public string? DatabaseName {  get; private set; }
     }
 }
