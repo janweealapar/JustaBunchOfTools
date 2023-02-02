@@ -27,7 +27,7 @@ namespace JBOT.WPF.Views.Windows
         public EditUnitTestDialogViewModel ViewModel { get; }
         public EditUnitTestDialogWindow(IApiService apiService, ICurrentConnections currentConnections, int unitTestId)
         {
-            ViewModel = new EditUnitTestDialogViewModel(apiService, currentConnections, unitTestId);
+            ViewModel = new EditUnitTestDialogViewModel(apiService, currentConnections, unitTestId, this);
             DataContext = this;
             InitializeComponent();
         }

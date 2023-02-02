@@ -31,7 +31,7 @@ namespace JBOT.WPF.Views.Windows
         public AddUnitTestDialogViewModel ViewModel { get; }
         public AddUnitTestDialogWindow(IApiService apiService, ICurrentConnections currentConnections)
         {
-            ViewModel = new AddUnitTestDialogViewModel(apiService, currentConnections);
+            ViewModel = new AddUnitTestDialogViewModel(apiService, currentConnections, this);
             DataContext = this;
             InitializeComponent();
         }
@@ -40,5 +40,6 @@ namespace JBOT.WPF.Views.Windows
         {
             DialogResult = ViewModel._isReload;
         }
+
     }
 }

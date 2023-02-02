@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\JBOT.Api.props" />
-</Project>

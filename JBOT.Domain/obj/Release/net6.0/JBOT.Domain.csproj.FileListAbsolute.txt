@@ -1,0 +1,12 @@
+C:\repo\JustaBunchOfTools\JBOT.Domain\bin\Release\net6.0\JBOT.Domain.deps.json
+C:\repo\JustaBunchOfTools\JBOT.Domain\bin\Release\net6.0\JBOT.Domain.dll
+C:\repo\JustaBunchOfTools\JBOT.Domain\bin\Release\net6.0\JBOT.Domain.pdb
+C:\repo\JustaBunchOfTools\JBOT.Domain\obj\Release\net6.0\JBOT.Domain.csproj.AssemblyReference.cache
+C:\repo\JustaBunchOfTools\JBOT.Domain\obj\Release\net6.0\JBOT.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\repo\JustaBunchOfTools\JBOT.Domain\obj\Release\net6.0\JBOT.Domain.AssemblyInfoInputs.cache
+C:\repo\JustaBunchOfTools\JBOT.Domain\obj\Release\net6.0\JBOT.Domain.AssemblyInfo.cs
+C:\repo\JustaBunchOfTools\JBOT.Domain\obj\Release\net6.0\JBOT.Domain.csproj.CoreCompileInputs.cache
+C:\repo\JustaBunchOfTools\JBOT.Domain\obj\Release\net6.0\JBOT.Domain.dll
+C:\repo\JustaBunchOfTools\JBOT.Domain\obj\Release\net6.0\refint\JBOT.Domain.dll
+C:\repo\JustaBunchOfTools\JBOT.Domain\obj\Release\net6.0\JBOT.Domain.pdb
+C:\repo\JustaBunchOfTools\JBOT.Domain\obj\Release\net6.0\ref\JBOT.Domain.dll

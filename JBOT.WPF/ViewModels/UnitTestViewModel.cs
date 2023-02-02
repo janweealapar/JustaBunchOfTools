@@ -36,6 +36,7 @@ namespace JBOT.WPF.ViewModels
             _mapper = mapper;
             LoadGridCommand = new AsyncRelayCommand<object>(LoadGrid, CanExecuteLoadGridCommand);
             RunTestCommand = new AsyncRelayCommand(RunTest, CanRunTest);
+            ShowAddUnitTestDialogCommand = new RelayCommand(ShowAddUnitTestDialog, CanAdd);
         }
 
         public void OnNavigatedFrom()
@@ -48,7 +49,18 @@ namespace JBOT.WPF.ViewModels
                 InitializeViewModel();
         }
 
-        public IRelayCommand ShowAddUnitTestDialogCommand => new RelayCommand(ShowAddUnitTestDialog);
+        public IRelayCommand ShowAddUnitTestDialogCommand { get; set; }
+        public bool CanAdd()
+        {
+            if (CurrentConnections?.DatabaseId == null ||
+                CurrentConnections?.Server == null ||
+                CurrentConnections?.DatabaseName == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
         
         public async Task LoadGrid(object? obj)
         {
@@ -167,6 +179,9 @@ namespace JBOT.WPF.ViewModels
             base.OnDatabaseChange();
             LoadGridCommand.NotifyCanExecuteChanged();
             RunTestCommand.NotifyCanExecuteChanged();
+            ShowAddUnitTestDialogCommand.NotifyCanExecuteChanged();
+
+
         }
     }
 }

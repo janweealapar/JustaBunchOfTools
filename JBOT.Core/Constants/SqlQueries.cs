@@ -10,14 +10,15 @@ namespace JBOT.Application.Constants
     {
         public const string GetDatabasesQuery = "SELECT database_id as Id ,Name FROM sys.databases";
         public const string GetDatabaseByIdQuery = "SELECT database_id as Id ,Name FROM sys.databases WHERE database_id='{0}'";
-        public const string GetTestableObjectsQuery = 
+        public const string GetTestableObjectsQuery =
             @"SELECT 
             	   obj.object_id as ObjectId
-            	 , CONCAT(schema_name(obj.schema_id),'.' , obj.name) as Name
+            	 , CONCAT(sc.name,'.' , obj.name) as Name
             	 , 'Stored Procedure' as Type
             	 , substring(par.parameters, 0, len(par.parameters)) as Parameters
             	 , NULL as ReturnType
             FROM [{0}].sys.procedures obj
+			LEFT join [{0}].sys.schemas sc on sc.schema_id = obj.schema_id
             cross apply (select p.name + ' ' + TYPE_NAME(p.user_type_id) + ', ' 
                          from [{0}].sys.parameters p
                          where p.object_id = obj.object_id 
@@ -25,11 +26,12 @@ namespace JBOT.Application.Constants
             UNION ALL
             select 
             	   obj.object_id,
-                   CONCAT(schema_name(obj.schema_id),'.' , obj.name) as Name,
+                   CONCAT(sc.name,'.' , obj.name) as Name,
                    'Scalar Function' as type,
                     substring(par.parameters, 0, len(par.parameters)) as Parameter,
                     TYPE_NAME(ret.user_type_id) as ReturnType
             from [{0}].sys.objects obj
+			LEFT join [{0}].sys.schemas sc on sc.schema_id = obj.schema_id
             cross apply (select p.name + ' ' + TYPE_NAME(p.user_type_id) + ', ' 
                          from [{0}].sys.parameters p
                          where p.object_id = obj.object_id 
@@ -42,7 +44,7 @@ namespace JBOT.Application.Constants
             order by Name;";
         public const string GetTestableObjectDetailsQuery =
             @"select obj.object_id As ObjectId
-            	,	CONCAT(schema_name(obj.schema_id),'.' , obj.name) as Name
+            	,	CONCAT(sc.name,'.' , obj.name) as Name
             	, case obj.Type When 'P' THEN 'Stored Procedure'
             					WHEN 'FN' THEN 'Scalar Function'
             					ELSE type_desc END Type
@@ -57,6 +59,7 @@ namespace JBOT.Application.Constants
                 ,'' ErrorMessage
                 ,'' Server
             from [{0}].sys.objects obj
+			Left join [{0}].sys.schemas sc on sc.schema_id = obj.schema_id
             left join [{0}].sys.parameters ret on obj.object_id = ret.object_id
             		and ret.parameter_id = 0
             where obj.object_id='{1}'";

@@ -36,7 +36,9 @@
                 SelectedValuePath="Id"
                 SelectedItem="{Binding ViewModel.CurrentDatabase, Mode=TwoWay}"
                 VerticalAlignment="Top"
-                MinWidth="200"/>
+                MaxDropDownHeight="700"
+                MinWidth="200"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
         </StackPanel>
 

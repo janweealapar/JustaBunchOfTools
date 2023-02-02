@@ -22,8 +22,9 @@ using JBOT.Domain.Entities.Enums;
 
 namespace JBOT.WPF.ViewModels
 {
-    public partial class AddUnitTestDialogViewModel : ObservableObject
+    public partial class AddUnitTestDialogViewModel : BaseDialogViewModel
     {
+        
         private bool _isInitialized = false;
         public bool _isReload = false;
         private readonly IApiService _apiService;
@@ -43,6 +44,41 @@ namespace JBOT.WPF.ViewModels
         [NotifyCanExecuteChangedFor(nameof(SetSelectedTestableObjectCommand))]
         private ObservableCollection<TestableObjectDto> _testableObjects = new();
 
+
+        private IEnumerable<TestableObjectDto> TestObjectsUnfiltered = new TestableObjectDto[] { };
+
+        [ObservableProperty]
+        private IEnumerable<string> _searchByObjectNameOptions;
+
+        [ObservableProperty]
+        public IEnumerable<string> _searchByTypeOptions;
+
+        private string _searchByType = string.Empty;
+        public string SearchByType 
+        {
+            get => _searchByType;
+            set
+            {
+                if (SetProperty(ref _searchByType, value))
+                {
+                    FilterGridCommand.Execute(null);
+                }
+            }
+        }
+
+        private string _searchByName = string.Empty;
+        public string SearchByName 
+        {
+            get => _searchByName;
+            set
+            {
+                if (SetProperty(ref _searchByName, value))
+                {
+                    FilterGridCommand.Execute(null);
+                }
+            }
+        }
+
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CurrentObjectTitle))]
         [NotifyPropertyChangedFor(nameof(HasSelectedObject))]
@@ -59,11 +95,12 @@ namespace JBOT.WPF.ViewModels
         public string CurrentObjectTitle => $"{SelectedTestableObject.Type} - {SelectedTestableObject.Name}";
         public bool HasSelectedObject => string.IsNullOrEmpty(SelectedTestableObject.Name);
 
-        public AddUnitTestDialogViewModel(IApiService apiService, ICurrentConnections currentConnections)
+        public AddUnitTestDialogViewModel(IApiService apiService, ICurrentConnections currentConnections, UiWindow ownerPage)
+            :base(ownerPage)
         {
-            Title = "Add Unit Test";
             if (!_isInitialized)
             {
+                Title = "Add Unit Test";
                 _currentDatabaseId = currentConnections.DatabaseId.Value;
                 _currentConnections = currentConnections;
                 _apiService = apiService;
@@ -72,6 +109,7 @@ namespace JBOT.WPF.ViewModels
                 SetSelectedTestableObjectCommand = new AsyncRelayCommand<int>(SetSelectedTestableObject, CanExecuteSetSelectedTestableObjectCommand);
                 QuickRunCommand = new AsyncRelayCommand(QuickRun, CanExecuteQuickRun);
                 AddCommand = new AsyncRelayCommand(Add, CanAdd);
+                FilterGridCommand = new RelayCommand(FilterDataGrid);
             }
         }
 
@@ -83,11 +121,39 @@ namespace JBOT.WPF.ViewModels
         public IAsyncRelayCommand AddCommand { get; set; }
         public IRelayCommand ClearCommand  => new RelayCommand(Clear);
 
+        public IRelayCommand FilterGridCommand { get; set; }
+
+        public void FilterDataGrid()
+        {
+            TestableObjects.Clear();
+            var filterBy = new { Name = SearchByName, Type = SearchByType };
+            var filtered = TestObjectsUnfiltered.Where(w => (w.Name.Contains(filterBy.Name) || string.IsNullOrEmpty(filterBy.Name))
+                                      && (w.Type == filterBy.Type || string.IsNullOrEmpty(filterBy.Type) || filterBy.Type == "All"));
+
+            if (filtered!=  null)
+            {
+                TestableObjects.AddRange(filtered);
+            }
+        }
+
+
         public async Task GetTestableObjects()
         {
             TestableObjects.Clear();
-            var testableObjectDtos = await _apiService.TestableObjectDtos(_currentConnections.Server,_currentDatabaseId);
-            TestableObjects.AddRange(testableObjectDtos);
+            SearchByObjectNameOptions = new Collection<string>();
+            SearchByTypeOptions = new Collection<string>();
+
+            TestObjectsUnfiltered = await _apiService.TestableObjectDtos(_currentConnections.Server,_currentDatabaseId);
+            if (TestObjectsUnfiltered != null)
+            {
+                TestableObjects.AddRange(TestObjectsUnfiltered);
+                SearchByObjectNameOptions = TestObjectsUnfiltered.Select(s => s.Name);
+
+                var typeOptions = new List<string>();
+                typeOptions.Add("All");
+                typeOptions.AddRange(TestObjectsUnfiltered.Select(s => s.Type).Distinct());
+                SearchByTypeOptions = typeOptions;
+            }
         }
         private bool CanExecuteSetSelectedTestableObjectCommand(int obj)
         {
@@ -137,28 +203,19 @@ namespace JBOT.WPF.ViewModels
             return (TestableObjectDetails.Status ?? StatusEnums.Failed) == StatusEnums.Success;
         }
 
-        public void Clear()
-        {
-            TestableObjectDetails.Status = StatusEnums.Failed;
-            foreach (var parameter in TestableObjectDetails.InputParameters)
-            {
-                parameter.Value = string.Empty;
-            }
-
-            foreach (var parameter in TestableObjectDetails.OutputParameters)
-            {
-                parameter.Actual = string.Empty;
-                parameter.Expected = string.Empty;
-                parameter.Operator = null;
-                parameter.IsSuccess = null;
-            }
-        }
 
         private void InitializeViewModel()
         {
             Operators = EnumHelper.EnumToModel<Operator, OperatorEnums>();
             GetTestableObjectsCommand.Execute(null);
             _isInitialized = true;
+        }
+
+        protected override void Clear()
+        {
+            TestableObjectDetails = new();
+            TestName = string.Empty;
+            TestDescription = string.Empty;
         }
     }
 }

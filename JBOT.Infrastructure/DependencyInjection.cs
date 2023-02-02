@@ -24,9 +24,9 @@ namespace JBOT.Infrastructure
                 b => b.MigrationsAssembly(typeof(ApplicationDBContext).Assembly.FullName)), ServiceLifetime.Transient);
 
             //services.AddDbContext<ValidateDBContext>();
-            services.AddDbContext<ValidateDBContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("ValidateDatabase"),
-                b => b.MigrationsAssembly(typeof(ValidateDBContext).Assembly.FullName)), ServiceLifetime.Transient);
+            //services.AddDbContext<ValidateDBContext>(options =>
+            //    options.UseSqlServer(configuration.GetConnectionString("ValidateDatabase"),
+            //    b => b.MigrationsAssembly(typeof(ValidateDBContext).Assembly.FullName)), ServiceLifetime.Transient);
 
             services.AddScoped<IApplicationDBContext, ApplicationDBContext>();
             services.AddDbContext<IValidateDBContext, ValidateDBContext>();

@@ -11,10 +11,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wpf.Ui.Controls;
 
 namespace JBOT.WPF.ViewModels
 {
-    public partial class EditUnitTestDialogViewModel : ObservableObject
+    public partial class EditUnitTestDialogViewModel : BaseDialogViewModel
     {
         public bool _isInitialized = false;
         public bool _isReload = false;
@@ -36,11 +37,12 @@ namespace JBOT.WPF.ViewModels
         //[NotifyCanExecuteChangedFor(nameof(AddCommand))]
         private TestableObjectDetailsDto _testableObjectDetails = new();
 
-        public EditUnitTestDialogViewModel(IApiService apiService, ICurrentConnections currentConnections, int unitTestId)
+        public EditUnitTestDialogViewModel(IApiService apiService, ICurrentConnections currentConnections, int unitTestId, UiWindow ownerPage)
+            : base(ownerPage)
         {
-            Title = "Edit Unit Test";
             if (!_isInitialized)
             {
+                Title = "Edit Unit Test";
                 _currentDatabaseId = currentConnections?.DatabaseId ?? 0;
                 _currentConnections = currentConnections;
                 _apiService = apiService;
@@ -93,6 +95,11 @@ namespace JBOT.WPF.ViewModels
 
             return true;
             
+        }
+
+        protected override void Clear()
+        {
+            SetSelectedTestableObjectCommand.Execute(TestableObjectDetails.Id);
         }
     }
 }

@@ -2,7 +2,9 @@
 using JBOT.Domain.Entities.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +28,17 @@ namespace JBOT.Application.Dtos
         public StatusEnums? Status { get; set; }
         public string ErrorTitle { get; set; }
         public string ErrorMessage { get; set; }
+
+        public TestableObjectDetailsDto DeepCopy()
+        {
+            MemoryStream ms = new MemoryStream();
+            BinaryFormatter bf = new BinaryFormatter();
+            bf.Serialize(ms, this);
+            ms.Position = 0;
+            var obj = (TestableObjectDetailsDto)bf.Deserialize(ms);
+            ms.Close();
+            return obj;
+        }
     }
     public class BaseParameterDto
     {
@@ -48,7 +61,6 @@ namespace JBOT.Application.Dtos
     {
         public string Value { get; set; }
     }
-
     public class OutputParameterDto : BaseParameterDto
     {
         public OperatorEnums? Operator { get; set; }
