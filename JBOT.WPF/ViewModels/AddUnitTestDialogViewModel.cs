@@ -154,6 +154,13 @@ namespace JBOT.WPF.ViewModels
                 typeOptions.AddRange(TestObjectsUnfiltered.Select(s => s.Type).Distinct());
                 SearchByTypeOptions = typeOptions;
             }
+
+#if DEBUG
+            for (int i = 1; i <= 100; i++)
+            {
+                TestableObjects.Add(new TestableObjectDto { Name = $"dbo.MockObject {i}" });
+            }
+#endif
         }
         private bool CanExecuteSetSelectedTestableObjectCommand(int obj)
         {

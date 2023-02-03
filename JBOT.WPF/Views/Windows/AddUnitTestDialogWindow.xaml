@@ -94,8 +94,12 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Stretch">
-                <StackPanel Orientation="Horizontal" CanHorizontallyScroll="True" HorizontalAlignment="Stretch">
+            <Grid Grid.Row="0" Grid.RowSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" CanHorizontallyScroll="True" HorizontalAlignment="Stretch">
                     <ui:AutoSuggestBox 
                         x:Name="txtSearchByName"
                         VerticalAlignment="Top"
@@ -117,7 +121,8 @@
                 </StackPanel>
                 
 
-                <ui:DataGrid 
+                <ui:DataGrid
+                Grid.Row="1"
                 x:Name="dataGrid"
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
@@ -147,7 +152,7 @@
                         <DataGridTextColumn Binding="{Binding ReturnType}" Header="ReturnType" Width="Auto" IsReadOnly="True"/>
                     </ui:DataGrid.Columns>
                 </ui:DataGrid>
-            </StackPanel>
+            </Grid>
             
 
             <ScrollViewer Grid.Row="0" Grid.Column="1" Margin="10,0">

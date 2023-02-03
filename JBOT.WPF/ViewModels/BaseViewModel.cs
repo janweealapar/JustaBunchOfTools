@@ -79,11 +79,14 @@ namespace JBOT.WPF.ViewModels
         {
             Databases.Clear();
             Databases.Add(await _apiService.GetDatabaseDtos(server));
+#if DEBUG
             int start = Databases.Max(d => d.Id);
             for (int i = 0; i < 100; i++)
             {
                 Databases.Add(new DatabaseDto { Id = start + i, Name = $"Database {start + i}" });
             }
+#endif
+
         }
 
         protected virtual void OnDatabaseChange()
