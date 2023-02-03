@@ -85,6 +85,7 @@ namespace JBOT.Application.Helpers
                 if (parameter != null)
                 {
                     parameter.Value = inputParameter.Value;
+                    parameter.DateModified = DateTime.Now;
                 }
             }
         }
@@ -100,6 +101,7 @@ namespace JBOT.Application.Helpers
                     assert.OperatorId = (int)outputParameter.Operator;
                     assert.ActualValue = outputParameter.Actual;
                     assert.StatusId = outputParameter.IsSuccess ?? false  ? (int)StatusEnums.Success : (int)StatusEnums.Failed;
+                    assert.DateModified = DateTime.Now;
                 }
             }
         }
