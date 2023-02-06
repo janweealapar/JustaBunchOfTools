@@ -1,6 +1,7 @@
 ﻿using JBOT.Application.Common.Interfaces;
 using JBOT.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,11 +23,23 @@ namespace JBOT.Application.Commands
             }
             public async Task<int> Handle(RemoveUnitTestCommand request, CancellationToken cancellationToken)
             {
-                var unitTest = await _applicationDBContext.FindAsync<UnitTest>(request.UnitTestId);
-                unitTest.Parameters.Clear();
-                unitTest.Assertations.Clear();
-                _applicationDBContext.Delete(unitTest);
-                return await _applicationDBContext.SaveChangeAsync();
+                int result = 0;
+                try
+                {
+                    var unitTest = await _applicationDBContext.UnitTests
+                                            .Include(u=> u.Parameters)
+                                            .Include(u=> u.Assertations)
+                                            .FirstOrDefaultAsync(u=> u.Id == request.UnitTestId);
+                    unitTest.Parameters.Clear();
+                    unitTest.Assertations.Clear();
+                    _applicationDBContext.Delete(unitTest);
+                    result = await _applicationDBContext.SaveChangeAsync();
+                }
+                catch (Exception ex)
+                {
+                    string message = ex.Message;
+                }
+                return result;
             }
         }
     }

@@ -3,6 +3,7 @@ using JBOT.Application.Common.Interfaces;
 using JBOT.Application.Dtos;
 using JBOT.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,10 @@ namespace JBOT.Application.Queries.UnitTests
             }
             public async Task<TestableObjectDetailsDto> Handle(GetUnitTestByIdQuery request, CancellationToken cancellationToken)
             {
-                var unitTest = await _context.UnitTests.FindAsync(request.Id);
+                var unitTest = await _context.UnitTests
+                                    .Include(u=> u.Parameters)
+                                    .Include(u=> u.Assertations)
+                                    .FirstOrDefaultAsync(u => u.Id == request.Id);
                 var dto = new TestableObjectDetailsDto();
                 if (unitTest!=null)
                 {

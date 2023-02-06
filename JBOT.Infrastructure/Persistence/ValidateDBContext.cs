@@ -13,6 +13,9 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using JBOT.Domain.Entities.Enums;
 using Newtonsoft.Json.Serialization;
+using JBOT.Domain.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Data.Common;
 
 namespace JBOT.Infrastructure.Persistence
 {
@@ -50,80 +53,95 @@ namespace JBOT.Infrastructure.Persistence
             this.Parameters.FromSqlRaw(string.Format(SqlQueries.GetTestableObjectParametersQuery, databaseName, objectId)).ToListAsync();
 
 
-
-        public async Task<TestableObjectDetailsDto> RunUnitTest(TestableObjectDetailsDto unitTest)
+        public async Task<List<TestableObjectDetailsDto>> RunUnitTest(List<TestableObjectDetailsDto> unitTests)
         {
-            string parameterString = string.Empty, result = string.Empty;
-            SqlParameter[] parameterArray;
             using (var command = this.Database.GetDbConnection().CreateCommand())
             {
-                try
+                foreach (var unitTest in unitTests)
                 {
-                    command.Parameters.Clear();
-                    parameterString = unitTest.InputParameters.Select(p => p.Name).ToList().ConcatList(",");
-                    parameterArray = unitTest.InputParameters.Select(p => new SqlParameter
-                    {
-                        ParameterName = p.Name,
-                        Value = p.Value
-                    }).ToArray();
-                    command.Parameters.AddRange(parameterArray);
-
-
-                    if (unitTest.Type == ObjectType.ScalarFunction)
-                    {
-                        command.CommandType = CommandType.Text;
-                        command.CommandText = $"SELECT [{unitTest.DatabaseName}].{unitTest.Name}({parameterString})";
-                        await this.Database.OpenConnectionAsync();
-                        result = (await command.ExecuteScalarAsync()).ToString();
-                    }
-                    else if (unitTest.Type == ObjectType.Procedure)
-                    {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.CommandText = $"[{unitTest.DatabaseName}].{unitTest.Name}";
-                        command.Parameters.Insert(0, unitTest.OutputParameters.Where(p => p.Id == 0)
-                            .Select(p => new SqlParameter
-                            {
-                                ParameterName = p.Name,
-                                Direction = ParameterDirection.ReturnValue
-                            }).First());
-                        var outputParameterArray = unitTest.OutputParameters.Where(p => p.Id > 0)
-                                                    .Select(p => new SqlParameter
-                                                    {
-                                                        ParameterName = p.Name,
-                                                        Direction = ParameterDirection.Output,
-                                                        Precision = (byte)p.Precision,
-                                                        Scale = (byte)p.Scale,
-                                                        Size = p.MaxLength
-                                                    }).ToArray();
-                        command.Parameters.AddRange(outputParameterArray);
-                        await this.Database.OpenConnectionAsync();
-                        result = (await command.ExecuteScalarAsync())?.ToString() ?? string.Empty;
-                        if (string.IsNullOrEmpty(result))
-                        {
-                            result = command.Parameters[unitTest.OutputParameters.First().Name].Value?.ToString() ?? string.Empty;
-                        }
-                    }
-                    unitTest.OutputParameters.First(p => p.Id == 0).Actual = result;
-                    foreach (var item in unitTest.OutputParameters.Where(p => p.Id > 0))
-                    {
-                        item.Actual = command.Parameters[item.Name].Value?.ToString();
-                    }
-
-                    unitTest.OutputParameters.Assert();
-                    unitTest.Status = unitTest.OutputParameters.Where(p=> !p.IsSuccess ?? false).Any() ? StatusEnums.Failed: StatusEnums.Success;
-                    unitTest.ErrorTitle = $"{unitTest.Status?.GetEnumDescription() ?? string.Empty}.";
+                    await ExecuteSingleUnitTest(unitTest, command);
                 }
-                catch (Exception ex)
-                {
-                    unitTest.Status = StatusEnums.Failed;
-                    unitTest.ErrorTitle = $"{unitTest.Status?.GetEnumDescription() ?? string.Empty}.";
-                    unitTest.ErrorMessage = ex.Message;
-                }
-                
+            }
+
+            return unitTests;
+        }
+        public async Task<TestableObjectDetailsDto> RunUnitTest(TestableObjectDetailsDto unitTest)
+        {
+            using (var command = this.Database.GetDbConnection().CreateCommand())
+            {
+                await ExecuteSingleUnitTest(unitTest, command);
             }
             return unitTest;
         }
 
+        private async Task ExecuteSingleUnitTest(TestableObjectDetailsDto unitTest, DbCommand command)
+        {
+            try
+            {
+                string parameterString = string.Empty, result = string.Empty;
+                SqlParameter[] parameterArray;
+
+                command.Parameters.Clear();
+                parameterString = unitTest.InputParameters.Select(p => p.Name).ToList().ConcatList(",");
+                parameterArray = unitTest.InputParameters.Select(p => new SqlParameter
+                {
+                    ParameterName = p.Name,
+                    Value = p.Value
+                }).ToArray();
+                command.Parameters.AddRange(parameterArray);
+
+
+                if (unitTest.Type == ObjectType.ScalarFunction)
+                {
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = $"SELECT [{unitTest.DatabaseName}].{unitTest.Name}({parameterString})";
+                    await this.Database.OpenConnectionAsync();
+                    result = (await command.ExecuteScalarAsync()).ToString();
+                }
+                else if (unitTest.Type == ObjectType.Procedure)
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = $"[{unitTest.DatabaseName}].{unitTest.Name}";
+                    command.Parameters.Insert(0, unitTest.OutputParameters.Where(p => p.Id == 0)
+                        .Select(p => new SqlParameter
+                        {
+                            ParameterName = p.Name,
+                            Direction = ParameterDirection.ReturnValue
+                        }).First());
+                    var outputParameterArray = unitTest.OutputParameters.Where(p => p.Id > 0)
+                                                .Select(p => new SqlParameter
+                                                {
+                                                    ParameterName = p.Name,
+                                                    Direction = ParameterDirection.Output,
+                                                    Precision = (byte)p.Precision,
+                                                    Scale = (byte)p.Scale,
+                                                    Size = p.MaxLength
+                                                }).ToArray();
+                    command.Parameters.AddRange(outputParameterArray);
+                    await this.Database.OpenConnectionAsync();
+                    result = (await command.ExecuteScalarAsync())?.ToString() ?? string.Empty;
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        result = command.Parameters[unitTest.OutputParameters.First().Name].Value?.ToString() ?? string.Empty;
+                    }
+                }
+                unitTest.OutputParameters.First(p => p.Id == 0).Actual = result;
+                foreach (var item in unitTest.OutputParameters.Where(p => p.Id > 0))
+                {
+                    item.Actual = command.Parameters[item.Name].Value?.ToString();
+                }
+
+                unitTest.OutputParameters.Assert();
+                unitTest.Status = unitTest.OutputParameters.Where(p => !p.IsSuccess ?? false).Any() ? StatusEnums.Failed : StatusEnums.Success;
+                unitTest.ErrorTitle = $"{unitTest.Status?.GetEnumDescription() ?? string.Empty}.";
+            }
+            catch (Exception ex)
+            {
+                unitTest.Status = StatusEnums.Failed;
+                unitTest.ErrorTitle = $"{unitTest.Status?.GetEnumDescription() ?? string.Empty}.";
+                unitTest.ErrorMessage = ex.Message;
+            }
+        }
         #endregion
 
 

@@ -35,6 +35,7 @@ namespace JBOT.Application.Queries.UnitTests
             public async Task<List<UnitTestDto>> Handle(GetAllUnitTestsQuery request, CancellationToken cancellationToken)
             {
                 var unitTests = await _applicationDBContext.UnitTests
+                                        .Include(u=> u.Parameters)
                                         .Where(u=> u.Server == request.Server 
                                                     && u.DatabaseName == request.Database).ToListAsync();
                 var dto = _mapper.Map<List<UnitTestDto>>(unitTests);

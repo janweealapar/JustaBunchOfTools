@@ -19,8 +19,8 @@ namespace JBOT.Infrastructure
         {
             
             services.AddDbContext<ApplicationDBContext>(options =>
-                options.UseLazyLoadingProxies()
-                .UseSqlServer(configuration.GetConnectionString("JbotDatabase"),
+                //options.UseLazyLoadingProxies()
+                options.UseSqlServer(configuration.GetConnectionString("JbotDatabase"),
                 b => b.MigrationsAssembly(typeof(ApplicationDBContext).Assembly.FullName)), ServiceLifetime.Transient);
 
             //services.AddDbContext<ValidateDBContext>();

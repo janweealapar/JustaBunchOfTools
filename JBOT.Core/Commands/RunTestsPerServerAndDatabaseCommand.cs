@@ -7,8 +7,10 @@ using JBOT.Domain.Entities;
 using JBOT.Domain.Entities.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -37,22 +39,27 @@ namespace JBOT.Application.Commands
             }
             public override async Task<List<UnitTestDto>> DoTask(RunTestsPerServerAndDatabaseCommand request, CancellationToken cancellationToken)
             {
+
                 var unitTestList = new List<UnitTestDto>();
                 var taskList = new List<Task<TestableObjectDetailsDto>>();
                 var unitTests = await _applicationDBContext.UnitTests
+                                        .Include(i => i.Parameters)
+                                        .Include(i => i.Assertations)
                                         .Where(u => u.Server == request.Server
                                                     && u.DatabaseName == request.DatabaseName).ToListAsync();
+
                 if (unitTests != null)
                 {
+                    var dtoList = new List<TestableObjectDetailsDto>();
                     foreach (var item in unitTests)
                     {
                         var dto = _mapper.Map<TestableObjectDetailsDto>(item);
                         dto.InputParameters = _mapper.Map<List<ParameterDto>>(item.Parameters.Where(p => !p.IsOutput && p.ParameterId > 0));
                         dto.OutputParameters = _mapper.Map<List<OutputParameterDto>>(item.Assertations);
                         dto.Status = null;
-                        taskList.Add(ValidateDBContext.RunUnitTest(dto));
+                        dtoList.Add(dto);
                     }
-                    var dtoList = await Task.WhenAll(taskList);
+                    await ValidateDBContext.RunUnitTest(dtoList);
 
                     foreach (var dto in dtoList)
                     {

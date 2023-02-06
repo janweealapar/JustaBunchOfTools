@@ -28,7 +28,10 @@ namespace JBOT.Application.Commands
             {
                 try
                 {
-                    var unitTest = await _context.UnitTests.FindAsync(request.TestableObjectDetailsDto.Id);
+                    var unitTest = await _context.UnitTests
+                                             .Include(u => u.Parameters)
+                                             .Include(u => u.Assertations)
+                                             .FirstOrDefaultAsync(u => u.Id == request.TestableObjectDetailsDto.Id);
                     if (unitTest != null)
                     {
                         unitTest.TestName = request.TestableObjectDetailsDto.TestName;
@@ -42,25 +45,6 @@ namespace JBOT.Application.Commands
 
                         _context.Update(unitTest);
                         await _context.SaveChangeAsync();
-                        //foreach (var inputParameter in request.TestableObjectDetailsDto.InputParameters)
-                        //{
-                        //    var parameter = unitTest.Parameters.SingleOrDefault(p => p.ParameterId == inputParameter.Id);
-                        //    if (parameter != null)
-                        //    {
-                        //        parameter.Value = inputParameter.Value;
-                        //    }
-                        //}
-
-                        //foreach (var outputParameter in request.TestableObjectDetailsDto.OutputParameters)
-                        //{
-                        //    var assert = unitTest.Assertations.SingleOrDefault(p => p.UnitTestParameter.ParameterId == outputParameter.Id);
-                        //    if (assert != null)
-                        //    {
-                        //        assert.ExpectedValue = outputParameter.Expected;
-                        //        assert.OperatorId = (int)outputParameter.Operator;
-                        //        assert.ActualValue = outputParameter.Actual;
-                        //    }
-                        //}
 
                         return 200;
                     }

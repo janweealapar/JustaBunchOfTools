@@ -15,5 +15,6 @@ namespace JBOT.Application.Common.Interfaces
         Task<TestableObjectDetailsDto> GetTestableObjectDetailsById(string databaseName, int objectId);
         Task<List<ParameterDto>> GetParametersByDatabaseAndObjectId(string databaseName, int objectId);
         Task<TestableObjectDetailsDto> RunUnitTest(TestableObjectDetailsDto unitTest);
+        Task<List<TestableObjectDetailsDto>> RunUnitTest(List<TestableObjectDetailsDto> unitTests);
     }
 }
